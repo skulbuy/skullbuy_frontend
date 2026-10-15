@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkulBuy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <section class="view" id="view-home">
+      <!-- Top bar -->
+      <header class="topbar">
+        <div class="topbar-row">
+          <img src="Skulbuy-logo.jpg" class="logo">
+          <button class="icon-btn" aria-label="Notifications">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          </button>
+        </div>
+        <label class="search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="searchInput" placeholder="Search for items, gadgets, services...">
+        </label>
+      </header>
+
+      <main class="content">
+
+        <!-- Alert -->
+        <div class="alert">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          <p>FUTMX: Semester exams start next week. Buy your study materials now!</p>
+        </div>
+
+        <!-- SkulBox promo -->
+        <section class="promo">
+          <h2>Join SkulBox Savings</h2>
+          <p>Save daily, get your food box delivered every month.</p>
+          <button class="btn-white" id="getStarted">Get Started</button>
+          <svg class="promo-icon" width="110" height="110" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+        </section>
+
+        <!-- Featured -->
+        <div class="section-head">
+          <h2>Featured Listings</h2>
+          <a href="#" class="see-all">See All</a>
+        </div>
+        <div class="featured-row" id="featured"></div>
+
+        <!-- Points -->
+        <section class="points">
+          <div class="points-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.48 12.89 17 22l-5-3-5 3 1.52-9.11"/></svg>
+          </div>
+          <div class="points-text">
+            <span>Your Balance</span>
+            <strong id="pointsBalance">450 SkulBox Points</strong>
+          </div>
+          <button class="btn-outline" id="redeem">Redeem</button>
+        </section>
+
+        <!-- Recently posted -->
+        <div class="section-head">
+          <h2>Recently Posted</h2>
+          <svg class="trend" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg>
+        </div>
+        <div class="recent-list" id="recent"></div>
+
+      </main>
+    </section>
+
+
+    <section class="view" id="view-categories">
+      <header class="topbar">
+        <div class="topbar-row">
+          <h1 class="page-title">Marketplace</h1>
+          <button class="icon-btn" aria-label="Filter">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3H2l8 9.46V19l4 2v-8.54z"/></svg>
+          </button>
+        </div>
+        <label class="search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="catSearch" placeholder="Search in categories...">
+        </label>
+        <div class="chips" id="chips"></div>
+      </header>
+
+      <main class="content">
+        <div class="grid" id="grid"></div>
+        <div class="empty" id="empty" hidden>
+          <div class="empty-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          </div>
+          <p>No items found in this category.</p>
+        </div>
+      </main>
+    </section>
+
+
+    <section class="view" id="view-post">
+      <header class="topbar">
+        <h1 class="page-title">Post an Item</h1>
+        <p class="page-sub">Reach thousands of students on campus.</p>
+      </header>
+
+      <main class="content">
+        <form id="postForm" novalidate>
+
+          <div class="photos">
+            <button type="button" class="photo-slot add" data-slot="0">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/></svg>
+              <span>Add Photo</span>
+            </button>
+            <button type="button" class="photo-slot" data-slot="1" aria-label="Add photo 2"></button>
+            <button type="button" class="photo-slot" data-slot="2" aria-label="Add photo 3"></button>
+          </div>
+          <input type="file" id="photoPicker" accept="image/*" hidden>
+
+          <div class="field">
+            <label for="title">Item Title</label>
+            <input type="text" id="title" placeholder="e.g. iPhone 13 Pro Max">
+          </div>
+
+          <div class="row">
+            <div class="field">
+              <label for="price">Price (₦)</label>
+              <input type="number" id="price" placeholder="0.00" min="0" inputmode="decimal">
+            </div>
+            <div class="field">
+              <label for="category">Category</label>
+              <select id="category">
+                <option value="">Select</option>
+                <option>Electronics</option>
+                <option>Fashion</option>
+                <option>Hostel Essentials</option>
+                <option>Gadgets</option>
+                <option>Books</option>
+                <option>Services</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label id="conditionLabel">Condition</label>
+            <div class="segmented" role="group" aria-labelledby="conditionLabel">
+              <button type="button" class="seg" data-cond="New">New</button>
+              <button type="button" class="seg selected" data-cond="Fairly Used">Fairly Used</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="desc">Description</label>
+            <textarea id="desc" rows="4" placeholder="Tell us more about the item..."></textarea>
+          </div>
+
+          <div class="option-list">
+            <label class="option">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.6 2.6A2 2 0 0 0 11.2 2H4a2 2 0 0 0-2 2v7.2a2 2 0 0 0 .6 1.4l8.7 8.7a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>
+              <span class="option-name">Negotiable</span>
+              <input type="checkbox" id="negotiable">
+            </label>
+            <div class="option">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>
+              <span class="option-name">Location</span>
+              <strong class="location">FUTMX Campus</strong>
+            </div>
+          </div>
+
+          <div class="boost">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            <div>
+              <h3>Boost your listing?</h3>
+              <p>Get 5x more views by featuring your item at the top of the page.</p>
+              <a href="#">Learn more</a>
+            </div>
+          </div>
+
+          <p class="form-error" id="formError" role="alert" hidden></p>
+          <button type="submit" class="btn-primary">Post Item</button>
+        </form>
+      </main>
+    </section>
+
+    <section class="view" id="view-skulbox">
+      <header class="sb-hero">
+        <h1>SkulBox Savings</h1>
+        <p>Secure your food supply for next month.</p>
+        <svg class="sb-hero-icon" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+      </header>
+
+      <main class="content sb-main">
+
+        <section class="sb-card">
+          <div class="sb-progress-head">
+            <h2>Current Progress</h2>
+            <span class="sb-pill">March Cycle</span>
+          </div>
+          <div class="sb-bar"><span id="sbBar"></span></div>
+          <div class="sb-amounts">
+            <span id="sbSaved"></span>
+            <span id="sbTarget"></span>
+          </div>
+          <div class="sb-cycle">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+            <span>Cycle closes on 25th March</span>
+          </div>
+        </section>
+
+        <h2 class="sb-heading">Choose a Package</h2>
+        <div id="packages"></div>
+
+        <section class="sb-daily">
+          <h2>Daily Savings Model</h2>
+          <p>Can't pay at once? Join our cooperative-style daily contribution. Pay as little as ₦850 daily to secure your box.</p>
+          <div class="sb-tiles">
+            <div class="sb-tile"><small>30-Day Plan</small><strong id="sbPerDay"></strong></div>
+            <div class="sb-tile"><small>Grace Period</small><strong>3 Days</strong></div>
+          </div>
+          <button type="button" class="sb-start" id="sbStart">Start Daily Savings</button>
+          <svg class="sb-daily-icon" width="70" height="70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></svg>
+        </section>
+
+        <div class="sb-trust">
+          <div class="sb-card">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+            <span>Verified Supply</span>
+          </div>
+          <div class="sb-card">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f0a30a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            <span>Locked Savings</span>
+          </div>
+        </div>
+
+      </main>
+    </section>
+
+
+    <section class="view" id="view-profile">
+      <header class="pf-top">
+        <div class="pf-id">
+          <button type="button" class="pf-avatar" id="pfAvatar" aria-label="Upload profile picture">
+            <span class="pf-pic">
+              <svg width="38" height="38" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="8" r="4.2"/><path d="M3.5 22a8.5 8.5 0 0 1 17 0z"/></svg>
+            </span>
+            <i class="pf-badge">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/></svg>
+            </i>
+          </button>
+          <input type="file" id="pfPicker" accept="image/*" hidden>
+          <div>
+            <h1>Felix Adebayo</h1>
+            <p>FUTMX Student • ID: 2024/1029</p>
+            <div class="pf-tags"><span class="tag-orange">Seller</span><span class="tag-grey">Buyer</span></div>
+          </div>
+        </div>
+
+        <div class="pf-stats">
+          <div class="pf-stat"><small>Points</small><strong class="accent" id="pfPoints"></strong></div>
+          <div class="pf-stat"><small>Sales</small><strong>12</strong></div>
+          <div class="pf-stat"><small>Rating</small><strong>4.8</strong></div>
+        </div>
+      </header>
+
+      <main class="content">
+
+        <section class="pf-wallet">
+          <div>
+            <small>SkulBox Wallet</small>
+            <strong id="pfWallet"></strong>
+          </div>
+          <svg class="pf-award" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.48 12.89 17 22l-5-3-5 3 1.52-9.11"/></svg>
+          <div class="pf-wallet-btns">
+            <button type="button" class="pf-topup" data-soon="Top Up">Top Up</button>
+            <button type="button" class="pf-history" data-soon="Wallet history">History</button>
+          </div>
+        </section>
+
+        <div class="pf-list">
+          <button type="button" class="pf-item" data-soon="My Listings">
+            <span class="pf-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></span>
+            <span class="pf-text"><b>My Listings</b></span>
+            <span class="pf-count">3</span>
+            <svg class="pf-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+
+          <button type="button" class="pf-item" data-soon="Verification Status">
+            <span class="pf-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></span>
+            <span class="pf-text"><b>Verification Status</b><em class="ok">Verified</em></span>
+            <svg class="pf-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+
+          <button type="button" class="pf-item" data-soon="Campus Ambassador">
+            <span class="pf-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+            <span class="pf-text"><b>Campus Ambassador</b><em>Earn commission</em></span>
+            <svg class="pf-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+
+          <button type="button" class="pf-item" data-soon="Notifications">
+            <span class="pf-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>
+            <span class="pf-text"><b>Notifications</b></span>
+            <span class="pf-count">12</span>
+            <svg class="pf-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+
+          <button type="button" class="pf-item" data-soon="Account Settings">
+            <span class="pf-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+            <span class="pf-text"><b>Account Settings</b></span>
+            <svg class="pf-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+
+        <h2 class="pf-label">Internal Tools</h2>
+        <div class="pf-tools">
+          <button type="button" class="pf-tool" data-soon="Analytics">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f0a30a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M8 17v-5M13 17V8M18 17v-9"/></svg>
+            <span>Analytics</span>
+          </button>
+          <button type="button" class="pf-tool" data-soon="Moderation">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1e2535" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+            <span>Moderation</span>
+          </button>
+        </div>
+
+        <button type="button" class="pf-logout" data-soon="Logout">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg>
+          Logout
+        </button>
+
+      </main>
+    </section>
+
+
+
+
+
+
+    <!-- Bottom nav -->
+    <nav class="bottom-nav" aria-label="Main">
+      <a href="#home" class="nav-item" data-nav="home">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="#categories" class="nav-item" data-nav="categories">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+        <span>Categories</span>
+      </a>
+      <a href="#post" data-nav="post" class="sell-btn" aria-label="Post an item">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>
+      </a>
+      <a href="#skulbox" class="nav-item" data-nav="skulbox">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+        <span>SkulBox</span>
+      </a>
+      <a href="#profile" class="nav-item" data-nav="profile">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+        <span>Profile</span>
+      </a>
+    </nav>
+
+  </div>
+  <input type="file" id="imagePicker" accept="image/*" hidden>
+  <script src="script.js"></script>
+</body>
+</html>
