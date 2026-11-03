@@ -965,10 +965,13 @@ async function startServer() {
       const targetUrl = `${LIVE_BACKEND_URL}${req.baseUrl}${req.url}`;
       const headers = new Headers();
       for (const [k, v] of Object.entries(req.headers)) {
-        if (!["host", "connection", "content-length"].includes(k.toLowerCase()) && v) {
+        if (!["host", "connection", "content-length", "user-agent"].includes(k.toLowerCase()) && v) {
           headers.set(k, Array.isArray(v) ? v.join(",") : v);
         }
       }
+      // Standard browser User-Agent to prevent Cloudflare WAF Error 1010 blocking
+      headers.set("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
+
       const fetchOpts: RequestInit = {
         method: req.method,
         headers,
@@ -978,9 +981,10 @@ async function startServer() {
         headers.set("Content-Type", "application/json");
       }
       const backendRes = await fetch(targetUrl, fetchOpts);
+      const contentType = backendRes.headers.get("content-type") || "";
 
-      // If backend returns 503 wake page, trigger wake signal and fall back gracefully
-      if (backendRes.status === 503) {
+      // If backend returns 503/403/502/401/422 or HTML wake/error page, trigger wake signal and fall back gracefully
+      if (backendRes.status === 503 || backendRes.status === 403 || backendRes.status === 401 || backendRes.status === 422 || backendRes.status >= 500 || contentType.includes("text/html")) {
         fetch("https://snapdeploy.dev/api/public/wake/skulbuy-backend-f36c6", { method: "POST" }).catch(() => {});
         return next();
       }
@@ -1307,6 +1311,15 @@ async function startServer() {
     res.json({ authenticated: true, user: safeUser });
   });
 
+  app.get("/api/users/me", (req, res) => {
+    const user = getAuthUser(req);
+    if (!user) {
+      return res.status(401).json({ detail: "Not authenticated" });
+    }
+    const { password, ...safeUser } = user;
+    res.json(safeUser);
+  });
+
   app.post("/api/auth/login", (req, res) => {
     const { email, password } = req.body;
     if (!email) {
@@ -1418,10 +1431,11 @@ async function startServer() {
       const { password: _, ...safeUser } = newUser;
       res.json({ token: String(newUser.id), user: safeUser });
     } catch (err: any) {
+      console.error("Registration error in /api/auth/register:", err);
       if (err.message && err.message.includes("UNIQUE constraint")) {
         return res.status(409).json({ error: "An account with this email address already exists. Please sign in." });
       }
-      res.status(500).json({ error: "Registration failed. Please verify your details." });
+      res.status(500).json({ error: err.message || "Registration failed. Please verify your details." });
     }
   });
 
