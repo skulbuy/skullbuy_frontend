@@ -3207,7 +3207,8 @@ Keep your response concise, helpful, and friendly under 3 paragraphs.`;
 
   const PORT = 3000;
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on http://0.0.0.0:${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Network access on http://127.0.0.1:${PORT}`);
   });
 }
 
