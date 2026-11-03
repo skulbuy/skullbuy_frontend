@@ -946,6 +946,51 @@ async function startServer() {
   app.use(express.json({ limit: "25mb" }));
   app.use(express.urlencoded({ extended: true, limit: "25mb" }));
 
+  const LIVE_BACKEND_URL = (process.env.BACKEND_URL || process.env.VITE_BACKEND_URL || "https://skulbuy-backend-f36c6.containers.snapdeploy.app").replace(/\/$/, "");
+
+  // Live Backend Diagnostic Endpoint
+  app.get("/api/backend-health", async (_req, res) => {
+    try {
+      const resp = await fetch(`${LIVE_BACKEND_URL}/health`, { signal: AbortSignal.timeout(5000) });
+      const data = await resp.json().catch(() => ({ status: resp.statusText }));
+      res.json({ live_backend: LIVE_BACKEND_URL, status: resp.status, data });
+    } catch (err: any) {
+      res.status(503).json({ live_backend: LIVE_BACKEND_URL, status: "offline", error: err.message });
+    }
+  });
+
+  // Reverse proxy /api/v1 directly to live SnapDeploy FastAPI backend
+  app.use("/api/v1", async (req, res) => {
+    try {
+      const targetUrl = `${LIVE_BACKEND_URL}/api/v1${req.url}`;
+      const headers = new Headers();
+      for (const [k, v] of Object.entries(req.headers)) {
+        if (!["host", "connection", "content-length"].includes(k.toLowerCase()) && v) {
+          headers.set(k, Array.isArray(v) ? v.join(",") : v);
+        }
+      }
+      const fetchOpts: RequestInit = {
+        method: req.method,
+        headers,
+      };
+      if (["POST", "PUT", "PATCH"].includes(req.method) && req.body && Object.keys(req.body).length > 0) {
+        fetchOpts.body = JSON.stringify(req.body);
+        headers.set("Content-Type", "application/json");
+      }
+      const backendRes = await fetch(targetUrl, fetchOpts);
+      res.status(backendRes.status);
+      backendRes.headers.forEach((val, key) => {
+        if (!["content-encoding", "transfer-encoding"].includes(key.toLowerCase())) {
+          res.setHeader(key, val);
+        }
+      });
+      const data = await backendRes.arrayBuffer();
+      res.send(Buffer.from(data));
+    } catch (err: any) {
+      res.status(502).json({ error: "Backend proxy error", details: err?.message });
+    }
+  });
+
   // Ensure public/uploads directory exists
   const uploadsDir = path.join(__dirname, "public", "uploads");
   if (!fs.existsSync(uploadsDir)) {
