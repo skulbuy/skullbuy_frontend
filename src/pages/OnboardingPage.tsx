@@ -399,36 +399,80 @@ export const OnboardingPage: React.FC = () => {
 
   const uniqueStates = ['All', ...Array.from(new Set(universities.map(u => u.state))).sort()];
 
+  // Onboarding Welcome Carousel Slides
+  const [welcomeSlide, setWelcomeSlide] = useState(0);
+  const WELCOME_SLIDES = [
+    {
+      tag: 'Zero Commission',
+      badge: 'Verified Students Only',
+      title: 'Campus-First Trade & Rental Network',
+      subtitle: 'FUTMX • UNILAG • OAU • UNIBEN • ABU & 20+ Campuses',
+      image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80',
+    },
+    {
+      tag: '100% Escrow Protected',
+      badge: '4-Digit Handover PIN',
+      title: 'Inspect Before Seller Gets Paid',
+      subtitle: 'Your money stays locked in Escrow until you inspect at a Campus Hub',
+      image: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=800&q=80',
+    },
+    {
+      tag: 'SkulBox & Daily Streaks',
+      badge: '+₦1,000 Welcome Bonus',
+      title: 'Save on Hostel Groceries & Gadgets',
+      subtitle: 'Join campus communities, claim daily streak cash, and trade safely',
+      image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80',
+    },
+  ];
+
+  useEffect(() => {
+    if (screen !== 1) return;
+    const timer = setInterval(() => {
+      setWelcomeSlide((prev) => (prev + 1) % 3);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [screen]);
+
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col justify-between max-w-md mx-auto relative overflow-hidden font-sans">
+    <div className="min-h-screen w-full bg-slate-950 text-white flex flex-col justify-between relative overflow-hidden font-sans">
       {/* Background Ambience */}
-      <div className="absolute -top-32 -left-32 w-80 h-80 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-orange-600/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-32 left-1/2 -translate-x-1/2 w-96 h-96 bg-orange-600/15 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Top Header Navigation */}
-      <header className="px-5 pt-5 pb-3 flex items-center justify-between z-20">
-        <div className="bg-white/95 backdrop-blur-md rounded-2xl px-2.5 py-1 shadow-md">
-          <SkulBuyLogo size="sm" showBadge={true} badge="Campus" />
-        </div>
+      {/* Centered Phone-Width Container */}
+      <div className="w-full max-w-md mx-auto min-h-screen flex flex-col justify-between sm:py-4 relative z-10">
+        <div className="flex-1 flex flex-col justify-between bg-slate-950 sm:bg-slate-900/90 sm:border sm:border-white/10 sm:rounded-[32px] sm:shadow-2xl overflow-hidden">
+          {/* Top Header Navigation */}
+          <header className="px-5 pt-5 pb-3 flex items-center justify-between z-20 border-b border-white/5">
+            <div className="bg-white/95 backdrop-blur-md rounded-2xl px-2.5 py-1 shadow-md">
+              <SkulBuyLogo size="sm" showBadge={false} />
+            </div>
 
-        {screen > 1 && (
-          <div className="flex items-center gap-1.5 text-[11px] font-black text-amber-300 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
-            <span>
-              {screen === 2 ? 'Step 2 of 4: Credentials' : screen === 25 ? 'Step 2B: Email OTP' : screen === 3 ? 'Step 3 of 4: Campus' : 'Step 4 of 4: Profile'}
-            </span>
-          </div>
-        )}
+            {/* Step Carousel Dots */}
+            <div className="flex items-center gap-1.5">
+              {[1, 2, 3, 4].map((st) => {
+                const activeStep = screen === 25 ? 2 : screen;
+                return (
+                  <span
+                    key={st}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      activeStep === st ? 'w-6 bg-amber-400' : activeStep > st ? 'w-2 bg-emerald-400' : 'w-1.5 bg-white/20'
+                    }`}
+                  />
+                );
+              })}
+            </div>
 
-        <button 
-          onClick={() => navigate('/')} 
-          className="text-xs font-semibold text-gray-400 hover:text-white transition px-2 py-1"
-        >
-          Skip
-        </button>
-      </header>
+            <button
+              onClick={() => navigate('/')}
+              className="text-xs font-semibold text-gray-400 hover:text-white transition px-2 py-1 cursor-pointer"
+            >
+              Skip
+            </button>
+          </header>
 
-      {/* Main Body */}
-      <main className="flex-1 flex flex-col justify-center px-5 py-3 z-10 overflow-y-auto">
+          {/* Main Body */}
+          <main className="flex-1 flex flex-col justify-center px-5 py-4 z-10 overflow-y-auto">
         <AnimatePresence mode="wait">
           {/* ========================================================================= */}
           {/* SCREEN 1: WELCOME & VALUE PROPOSITION                                    */}
@@ -455,27 +499,42 @@ export const OnboardingPage: React.FC = () => {
                 </p>
               </div>
 
-              {/* Realistic Hero Visual */}
+              {/* Interactive 3-Slide Hero Carousel */}
               <div className="relative rounded-3xl overflow-hidden bg-slate-900 border border-white/15 shadow-2xl h-52 mx-auto w-full group">
                 <img
-                  src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80"
-                  alt="Nigerian university campus students"
-                  className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition duration-700"
+                  key={WELCOME_SLIDES[welcomeSlide].image}
+                  src={WELCOME_SLIDES[welcomeSlide].image}
+                  alt={WELCOME_SLIDES[welcomeSlide].title}
+                  className="w-full h-full object-cover opacity-80 transition-all duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent flex flex-col justify-between p-4 text-left">
                   <div className="flex items-center justify-between">
                     <span className="bg-amber-500 text-slate-950 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
-                      Zero Commission
+                      {WELCOME_SLIDES[welcomeSlide].tag}
                     </span>
                     <div className="bg-black/60 backdrop-blur-md px-2 py-1 rounded-lg flex items-center gap-1 text-[10px] text-gray-200 border border-white/10">
                       <ShieldCheck size={13} className="text-emerald-400" />
-                      <span>Verified Students Only</span>
+                      <span>{WELCOME_SLIDES[welcomeSlide].badge}</span>
                     </div>
                   </div>
 
-                  <div>
-                    <p className="text-sm font-black text-white">Campus-First Trade & Rental Network</p>
-                    <p className="text-[10px] text-gray-300">FUTMX • UNILAG • OAU • UNIBEN • ABU & 20+ Campuses</p>
+                  <div className="flex items-end justify-between gap-2">
+                    <div>
+                      <p className="text-sm font-black text-white">{WELCOME_SLIDES[welcomeSlide].title}</p>
+                      <p className="text-[10px] text-gray-300">{WELCOME_SLIDES[welcomeSlide].subtitle}</p>
+                    </div>
+                    <div className="flex items-center gap-1 shrink-0 pb-0.5">
+                      {WELCOME_SLIDES.map((_, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => setWelcomeSlide(idx)}
+                          className={`h-1.5 rounded-full transition-all cursor-pointer ${
+                            welcomeSlide === idx ? 'w-4 bg-amber-400' : 'w-1.5 bg-white/40'
+                          }`}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -701,38 +760,10 @@ export const OnboardingPage: React.FC = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 py-3.5 rounded-2xl font-black text-xs shadow-md active:scale-95 transition flex items-center justify-center gap-2 mt-4"
+                    className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 py-3.5 rounded-2xl font-black text-xs shadow-md active:scale-95 transition flex items-center justify-center gap-2 mt-4 cursor-pointer"
                   >
                     {loading ? 'Authenticating...' : 'Sign In to Campus Account'}
                   </button>
-
-                  {/* Fast Demo Persona Switcher */}
-                  <div className="pt-2 border-t border-white/10 text-center">
-                    <p className="text-[10px] text-gray-400 mb-2">Or quick sign in as demo student:</p>
-                    <div className="flex justify-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => { setEmail('amina@futminna.edu.ng'); setPassword('password123'); }}
-                        className="text-[10px] bg-white/10 hover:bg-white/20 text-amber-300 font-bold px-2.5 py-1 rounded-lg border border-white/10"
-                      >
-                        Amina (Seller)
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => { setEmail('emeka@futminna.edu.ng'); setPassword('password123'); }}
-                        className="text-[10px] bg-white/10 hover:bg-white/20 text-amber-300 font-bold px-2.5 py-1 rounded-lg border border-white/10"
-                      >
-                        Emeka (Buyer)
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => { setEmail('zainab@futminna.edu.ng'); setPassword('password123'); }}
-                        className="text-[10px] bg-white/10 hover:bg-white/20 text-amber-300 font-bold px-2.5 py-1 rounded-lg border border-white/10"
-                      >
-                        Zainab (Vendor)
-                      </button>
-                    </div>
-                  </div>
                 </form>
               )}
             </motion.div>
@@ -1283,12 +1314,14 @@ export const OnboardingPage: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Footer */}
-      <footer className="px-5 py-3 text-center z-10 border-t border-white/5">
-        <p className="text-[10px] text-gray-500">
-          SkulBuy &copy; 2026. Empowering university students across Nigeria. Safe campus escrow trading protocol.
-        </p>
-      </footer>
+          {/* Footer */}
+          <footer className="px-5 py-3 text-center z-10 border-t border-white/5">
+            <p className="text-[10px] text-gray-500">
+              SkulBuy &copy; 2026. Empowering university students across Nigeria. Safe campus escrow trading protocol.
+            </p>
+          </footer>
+        </div>
+      </div>
     </div>
   );
 };
