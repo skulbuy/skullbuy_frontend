@@ -131,7 +131,7 @@ export const HomeCarousel: React.FC = () => {
       onTouchEnd={handleTouchEnd}
     >
       {/* Background slide image with smooth transition */}
-      <div className="relative h-60 sm:h-64 w-full overflow-hidden">
+      <div className="relative h-64 sm:h-80 md:h-96 w-full overflow-hidden">
         <img
           key={slide.id}
           src={slide.image}
@@ -144,39 +144,39 @@ export const HomeCarousel: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-gray-950/80 via-transparent to-transparent" />
 
         {/* Content Container */}
-        <div className="absolute inset-0 p-4 sm:p-5 flex flex-col justify-between text-white z-10">
+        <div className="absolute inset-0 p-5 sm:p-8 md:p-10 flex flex-col justify-between text-white z-10">
           {/* Top row: Badge & Product tag */}
           <div className="flex items-center justify-between gap-2">
-            <span className={`${slide.tagBg} text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full shadow-sm`}>
+            <span className={`${slide.tagBg} text-white text-[10px] sm:text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full shadow-sm`}>
               {slide.tag}
             </span>
 
             {slide.productBadge && (
-              <span className="bg-black/60 backdrop-blur-md text-amber-200 text-[10px] font-semibold px-2.5 py-0.5 rounded-full border border-white/10 hidden sm:inline-block">
+              <span className="bg-black/60 backdrop-blur-md text-amber-200 text-[10px] sm:text-xs font-semibold px-3 py-1 rounded-full border border-white/10 hidden sm:inline-block">
                 {slide.productBadge}
               </span>
             )}
           </div>
 
           {/* Bottom section: Headline, description, CTA */}
-          <div className="space-y-1.5 max-w-sm">
-            <h2 className="text-lg sm:text-xl font-black leading-tight text-white drop-shadow-xs">
+          <div className="space-y-2 max-w-xl md:max-w-2xl">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black leading-tight text-white drop-shadow-xs">
               {slide.headline}
             </h2>
-            <p className="text-xs text-gray-200 line-clamp-2 font-medium drop-shadow-xs">
+            <p className="text-xs sm:text-sm md:text-base text-gray-200 line-clamp-2 md:line-clamp-3 font-medium drop-shadow-xs">
               {slide.subhead}
             </p>
 
             {slide.priceNote && (
-              <p className="text-[11px] font-bold text-amber-300">
+              <p className="text-xs sm:text-sm font-bold text-amber-300">
                 {slide.priceNote}
               </p>
             )}
 
-            <div className="pt-1.5 flex items-center gap-2">
+            <div className="pt-2 flex items-center gap-2">
               <button
                 onClick={() => navigate(slide.ctaPath)}
-                className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 active:scale-95 text-white text-xs font-black px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-md shadow-amber-500/25 transition"
+                className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 active:scale-95 text-white text-xs sm:text-sm font-black px-5 py-2.5 rounded-xl flex items-center gap-2 shadow-md shadow-amber-500/25 transition"
               >
                 <span>{slide.ctaText}</span>
                 <ArrowRight size={13} />

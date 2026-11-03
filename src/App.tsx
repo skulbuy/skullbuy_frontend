@@ -23,8 +23,8 @@ export default function App() {
   return (
     <Router>
       <AuthProvider>
-        <div className="min-h-screen bg-gray-100 flex justify-center selection:bg-amber-500 selection:text-white">
-          <div className="w-full max-w-md bg-white min-h-screen relative shadow-2xl flex flex-col">
+        <div className="min-h-screen bg-gray-50/60 flex flex-col selection:bg-amber-500 selection:text-white">
+          <div className="w-full min-h-screen flex flex-col">
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/onboarding" element={<OnboardingPage />} />

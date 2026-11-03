@@ -221,18 +221,20 @@ export const CheckoutPage = () => {
       <Header />
 
       {/* Top back bar */}
-      <div className="px-4 py-3 flex items-center justify-between bg-white border-b border-gray-100 sticky top-[95px] z-30">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-1 text-xs font-bold text-gray-600 hover:text-gray-900"
-        >
-          <ArrowLeft size={16} />
-          <span>Back to Item</span>
-        </button>
-        <span className="text-xs font-black text-gray-900">Secure Checkout</span>
+      <div className="bg-white border-b border-gray-100 sticky top-[72px] z-30">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-1 text-xs font-bold text-gray-600 hover:text-gray-900"
+          >
+            <ArrowLeft size={16} />
+            <span>Back to Item</span>
+          </button>
+          <span className="text-xs font-black text-gray-900">Secure Campus Checkout</span>
+        </div>
       </div>
 
-      <div className="p-4 space-y-4 max-w-md mx-auto">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 space-y-4">
         {/* Single Seller Order Banner */}
         <div className="bg-amber-500/10 border border-amber-300 rounded-2xl p-3 flex items-center gap-2.5 text-xs text-amber-950">
           <ShieldCheck size={18} className="text-amber-600 shrink-0" />

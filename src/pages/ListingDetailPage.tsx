@@ -194,260 +194,312 @@ export const ListingDetailPage = () => {
       <Header />
 
       {/* Top back bar */}
-      <div className="px-4 py-3 flex items-center justify-between bg-white border-b border-gray-100 sticky top-[72px] z-30">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-1 text-xs font-bold text-gray-600 hover:text-gray-900"
-        >
-          <ArrowLeft size={16} />
-          <span>Back</span>
-        </button>
-
-        <div className="flex items-center gap-2">
-          {isOwner && (
-            <Link
-              to={`/sell?edit=${listing.id}`}
-              className="text-xs font-black text-amber-600 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3 py-1.5 rounded-xl transition"
-            >
-              Edit Listing / Photos
-            </Link>
-          )}
-
+      <div className="bg-white border-b border-gray-100 sticky top-[72px] z-30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
           <button
-            onClick={handleShare}
-            className="p-2 bg-gray-50 hover:bg-gray-100 rounded-full text-gray-600 relative transition"
-            title="Share via WhatsApp or copy link"
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-1 text-xs font-bold text-gray-600 hover:text-gray-900"
           >
-            <Share2 size={16} />
-            {copiedShare && (
-              <span className="absolute -bottom-7 right-0 bg-gray-900 text-white text-[9px] px-2 py-0.5 rounded shadow whitespace-nowrap">
-                Link Copied!
-              </span>
+            <ArrowLeft size={16} />
+            <span>Back</span>
+          </button>
+
+          <div className="flex items-center gap-2">
+            {isOwner && (
+              <Link
+                to={`/sell?edit=${listing.id}`}
+                className="text-xs font-black text-amber-600 bg-amber-50 hover:bg-amber-100 border border-amber-200 px-3 py-1.5 rounded-xl transition"
+              >
+                Edit Listing / Photos
+              </Link>
             )}
-          </button>
 
-          <button
-            onClick={handleToggleSave}
-            className={`p-2 rounded-full transition ${isSaved ? 'bg-red-50 text-red-500' : 'bg-gray-50 text-gray-600'}`}
-            title="Save to favorites"
-          >
-            <Heart size={16} className={isSaved ? 'fill-red-500' : ''} />
-          </button>
+            <button
+              onClick={handleShare}
+              className="p-2 bg-gray-50 hover:bg-gray-100 rounded-full text-gray-600 relative transition"
+              title="Share via WhatsApp or copy link"
+            >
+              <Share2 size={16} />
+              {copiedShare && (
+                <span className="absolute -bottom-7 right-0 bg-gray-900 text-white text-[9px] px-2 py-0.5 rounded shadow whitespace-nowrap">
+                  Link Copied!
+                </span>
+              )}
+            </button>
+
+            <button
+              onClick={handleToggleSave}
+              className={`p-2 rounded-full transition ${isSaved ? 'bg-red-50 text-red-500' : 'bg-gray-50 text-gray-600'}`}
+              title="Save to favorites"
+            >
+              <Heart size={16} className={isSaved ? 'fill-red-500' : ''} />
+            </button>
+          </div>
         </div>
       </div>
 
       {inAppToast && (
-        <div className="mx-4 mt-3 bg-amber-500 text-slate-950 font-bold text-xs p-3 rounded-2xl shadow-sm text-center">
-          {inAppToast}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-3">
+          <div className="bg-amber-500 text-slate-950 font-bold text-xs p-3 rounded-2xl shadow-sm text-center">
+            {inAppToast}
+          </div>
         </div>
       )}
 
-      {/* Image Gallery with Multi-Photo Switcher */}
-      <div className="relative bg-gray-900 w-full overflow-hidden">
-        <div className="h-72 sm:h-80 w-full relative">
-          <img
-            src={displayImages[activeImgIndex] || displayImages[0]}
-            alt={listing.title}
-            className="w-full h-full object-cover"
-            onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80'; }}
-          />
+      {/* Responsive Main Layout (2-Column on Desktop) */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Left Column: Photos & Details */}
+          <div className="lg:col-span-7 space-y-6">
+            {/* Image Gallery with Multi-Photo Switcher */}
+            <div className="bg-gray-900 rounded-3xl overflow-hidden shadow-sm">
+              <div className="h-72 sm:h-96 w-full relative">
+                <img
+                  src={displayImages[activeImgIndex] || displayImages[0]}
+                  alt={listing.title}
+                  className="w-full h-full object-cover"
+                  onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80'; }}
+                />
 
-          <div className="absolute top-3 left-3 flex gap-2">
-            <span className="bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
-              {listing.category_name}
-            </span>
-            <span className="bg-amber-500 text-slate-950 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">
-              {listing.condition}
-            </span>
-            {listing.is_rental ? (
-              <span className="bg-purple-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow">
-                FOR RENT
-              </span>
-            ) : null}
-          </div>
-
-          {isUnavailable && (
-            <div className="absolute inset-0 bg-black/70 backdrop-blur-xs flex items-center justify-center">
-              <div className="bg-red-500 text-white px-4 py-2 rounded-xl font-black text-sm uppercase tracking-widest shadow-lg">
-                {listing.status === 'sold' ? 'Sold Out' : 'Listing Withdrawn'}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Thumbnail Selector if multi-image */}
-        {displayImages.length > 1 && (
-          <div className="bg-slate-950/90 p-2 flex gap-2 overflow-x-auto justify-center">
-            {displayImages.map((img, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => setActiveImgIndex(idx)}
-                className={`w-12 h-12 rounded-lg overflow-hidden border-2 transition shrink-0 ${
-                  activeImgIndex === idx ? 'border-amber-400 scale-105 shadow' : 'border-transparent opacity-60'
-                }`}
-              >
-                <img src={img} alt={`Preview ${idx + 1}`} className="w-full h-full object-cover" />
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div className="px-4 pt-4 space-y-4">
-        {/* Title & Price Header */}
-        <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-2xs">
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-black text-gray-900 tracking-tight">
-                  ₦{Number(listing.price).toLocaleString()}
-                </span>
-                {listing.is_rental && (
-                  <span className="text-xs font-bold text-purple-600">
-                    / {listing.rental_period || 'per day'}
+                <div className="absolute top-4 left-4 flex gap-2">
+                  <span className="bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                    {listing.category_name}
                   </span>
+                  <span className="bg-amber-500 text-slate-950 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">
+                    {listing.condition}
+                  </span>
+                  {listing.is_rental ? (
+                    <span className="bg-purple-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow">
+                      FOR RENT
+                    </span>
+                  ) : null}
+                </div>
+
+                {isUnavailable && (
+                  <div className="absolute inset-0 bg-black/70 backdrop-blur-xs flex items-center justify-center">
+                    <div className="bg-red-500 text-white px-4 py-2 rounded-xl font-black text-sm uppercase tracking-widest shadow-lg">
+                      {listing.status === 'sold' ? 'Sold Out' : 'Listing Withdrawn'}
+                    </div>
+                  </div>
                 )}
               </div>
-              {listing.is_rental ? (
-                <span className="text-[10px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded inline-block mt-0.5">
-                  Campus Rental • Refundable ID Deposit
-                </span>
-              ) : listing.is_negotiable ? (
-                <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded inline-block mt-0.5">
-                  Price Negotiable
-                </span>
-              ) : (
-                <span className="text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded inline-block mt-0.5">
-                  Fixed Price
-                </span>
+
+              {/* Thumbnail Selector if multi-image */}
+              {displayImages.length > 1 && (
+                <div className="bg-slate-950/90 p-3 flex gap-2 overflow-x-auto justify-center">
+                  {displayImages.map((img, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setActiveImgIndex(idx)}
+                      className={`w-14 h-14 rounded-xl overflow-hidden border-2 transition shrink-0 ${
+                        activeImgIndex === idx ? 'border-amber-400 scale-105 shadow' : 'border-transparent opacity-60'
+                      }`}
+                    >
+                      <img src={img} alt={`Preview ${idx + 1}`} className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
               )}
             </div>
 
-            <div className="text-right text-[11px] text-gray-400 flex items-center gap-1">
-              <Clock size={12} />
-              <span>{new Date(listing.created_at).toLocaleDateString()}</span>
+            {/* Description */}
+            <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs">
+              <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2.5">Item Description</h2>
+              <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+                {listing.description}
+              </p>
+            </div>
+
+            {/* Safe Meetup Protocol Card (POL-01, Section 7.3) */}
+            <div className="bg-amber-50/70 border border-amber-200/80 rounded-3xl p-5">
+              <div className="flex items-start gap-3">
+                <ShieldCheck size={20} className="text-amber-600 shrink-0 mt-0.5" />
+                <div className="text-xs text-amber-950">
+                  <p className="font-bold text-sm">Campus Safe Meetup Rules:</p>
+                  <ul className="list-disc list-inside space-y-1 mt-1.5 text-amber-900 text-xs">
+                    <li>Always meet during daylight hours at public spots (e.g. SUB, Library, Gate).</li>
+                    <li>Inspect item thoroughly before exchanging cash or making transfer.</li>
+                    <li>Never send an advance "booking fee" or transport deposit.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* Report Listing Trigger */}
+            <div className="text-center pt-1">
+              <button
+                onClick={() => setShowReportModal(true)}
+                className="text-xs font-semibold text-gray-400 hover:text-red-500 inline-flex items-center gap-1.5 transition"
+              >
+                <Flag size={13} />
+                <span>Report this listing for safety or guideline violations</span>
+              </button>
             </div>
           </div>
 
-          <h1 className="text-base font-bold text-gray-900 mt-2 leading-snug">
-            {listing.title}
-          </h1>
-
-          <div className="flex items-center gap-1.5 text-xs text-gray-600 mt-2.5 pt-2.5 border-t border-gray-50">
-            <MapPin size={14} className="text-amber-500 shrink-0" />
-            <span className="font-medium">{listing.campus_location} (FUTMX)</span>
-          </div>
-        </div>
-
-        {/* Description */}
-        <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-2xs">
-          <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Item Description</h2>
-          <p className="text-xs text-gray-700 leading-relaxed whitespace-pre-line">
-            {listing.description}
-          </p>
-        </div>
-
-        {/* Seller Info Card with Campus Proximity */}
-        <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-2xs space-y-3">
-          <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Seller & Campus Location</h2>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center font-black text-sm">
-                {listing.seller_name.charAt(0)}
-              </div>
-              <div>
-                <div className="flex items-center gap-1">
-                  <p className="text-xs font-bold text-gray-900">{listing.seller_name}</p>
-                  {listing.seller_verified === 'verified' && (
-                    <span title="Verified FUTMX Student">
-                      <ShieldCheck size={14} className="text-emerald-600" />
+          {/* Right Column: Title, Price, Seller, & Actions */}
+          <div className="lg:col-span-5 space-y-5 lg:sticky lg:top-28">
+            {/* Title & Price Card */}
+            <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-3">
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-3xl font-black text-gray-900 tracking-tight">
+                      ₦{Number(listing.price).toLocaleString()}
+                    </span>
+                    {listing.is_rental && (
+                      <span className="text-sm font-bold text-purple-600">
+                        / {listing.rental_period || 'per day'}
+                      </span>
+                    )}
+                  </div>
+                  {listing.is_rental ? (
+                    <span className="text-xs font-bold text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-md inline-block mt-1">
+                      Campus Rental • Refundable ID Deposit
+                    </span>
+                  ) : listing.is_negotiable ? (
+                    <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-md inline-block mt-1">
+                      Price Negotiable
+                    </span>
+                  ) : (
+                    <span className="text-xs font-bold text-gray-500 bg-gray-100 px-2.5 py-0.5 rounded-md inline-block mt-1">
+                      Fixed Price
                     </span>
                   )}
                 </div>
-                <p className="text-[10px] text-gray-500">
-                  {listing.seller_department || 'FUT Minna Student'}
-                </p>
-                {listing.seller_verified === 'verified' ? (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded mt-0.5">
-                    <CheckCircle2 size={10} /> Verified Student ID
-                  </span>
-                ) : (
-                  <span className="text-[10px] text-gray-400">ID Verification Pending</span>
-                )}
+
+                <div className="text-right text-xs text-gray-400 flex items-center gap-1">
+                  <Clock size={13} />
+                  <span>{new Date(listing.created_at).toLocaleDateString()}</span>
+                </div>
+              </div>
+
+              <h1 className="text-lg font-bold text-gray-900 leading-snug">
+                {listing.title}
+              </h1>
+
+              <div className="flex items-center gap-2 text-xs text-gray-600 pt-3 border-t border-gray-50">
+                <MapPin size={15} className="text-amber-500 shrink-0" />
+                <span className="font-medium">{listing.campus_location} (FUTMX)</span>
+              </div>
+
+              {/* Desktop CTA Buttons */}
+              <div className="hidden md:flex flex-col gap-2.5 pt-3">
+                <button
+                  onClick={() => navigate(`/checkout/${listing.id}`)}
+                  disabled={isUnavailable}
+                  className={`w-full py-3.5 px-4 rounded-2xl text-xs font-black flex items-center justify-center gap-2 shadow-sm transition ${
+                    isUnavailable
+                      ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                      : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                  }`}
+                >
+                  <ShoppingBag size={16} />
+                  <span>Instant Campus Checkout</span>
+                </button>
+
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleStartChat}
+                    disabled={isUnavailable}
+                    className={`flex-1 py-3 px-4 rounded-2xl text-xs font-black flex items-center justify-center gap-2 border transition ${
+                      isUnavailable
+                        ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                        : 'bg-amber-500 hover:bg-amber-600 text-white border-amber-500'
+                    }`}
+                  >
+                    <MessageCircle size={16} />
+                    <span>Chat / Make Offer</span>
+                  </button>
+
+                  <button
+                    onClick={handleToggleSave}
+                    className={`p-3 rounded-2xl border transition ${isSaved ? 'border-red-200 bg-red-50 text-red-500' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+                    title="Save to favorites"
+                  >
+                    <Heart size={18} className={isSaved ? 'fill-red-500' : ''} />
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Area & Proximity Badge */}
-          <div className="bg-gray-50 rounded-xl p-2.5 border border-gray-100 text-xs space-y-1">
-            <div className="flex items-center gap-1.5 font-bold text-gray-800">
-              <MapPin size={14} className="text-amber-500 shrink-0" />
-              <span>Seller Area: {listing.seller_area || listing.campus_location || 'Gidan Kwano Campus'}</span>
-            </div>
-            {user?.campus_area && (
-              <p className="text-[10px] text-gray-500">
-                {listing.seller_area && user.campus_area && (listing.seller_area.split('-')[0] === user.campus_area.split('-')[0]) ? (
-                  <span className="text-emerald-700 font-bold">🟢 High Proximity: You are both located around {user.campus_area.split('-')[0].trim()}!</span>
-                ) : (
-                  <span>Your Area: {user.campus_area}</span>
+            {/* Seller Info Card with Campus Proximity */}
+            <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-2xs space-y-3.5">
+              <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Seller & Campus Location</h2>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center font-black text-base">
+                    {listing.seller_name.charAt(0)}
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-sm font-bold text-gray-900">{listing.seller_name}</p>
+                      {listing.seller_verified === 'verified' && (
+                        <span title="Verified FUTMX Student">
+                          <ShieldCheck size={16} className="text-emerald-600" />
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      {listing.seller_department || 'FUT Minna Student'}
+                    </p>
+                    {listing.seller_verified === 'verified' ? (
+                      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded mt-1">
+                        <CheckCircle2 size={11} /> Verified Student ID
+                      </span>
+                    ) : (
+                      <span className="text-[11px] text-gray-400">ID Verification Pending</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Area & Proximity Badge */}
+              <div className="bg-gray-50 rounded-2xl p-3 border border-gray-100 text-xs space-y-1.5">
+                <div className="flex items-center gap-1.5 font-bold text-gray-800">
+                  <MapPin size={14} className="text-amber-500 shrink-0" />
+                  <span>Seller Area: {listing.seller_area || listing.campus_location || 'Gidan Kwano Campus'}</span>
+                </div>
+                {user?.campus_area && (
+                  <p className="text-[11px] text-gray-500">
+                    {listing.seller_area && user.campus_area && (listing.seller_area.split('-')[0] === user.campus_area.split('-')[0]) ? (
+                      <span className="text-emerald-700 font-bold">🟢 High Proximity: You are both located around {user.campus_area.split('-')[0].trim()}!</span>
+                    ) : (
+                      <span>Your Area: {user.campus_area}</span>
+                    )}
+                  </p>
                 )}
+                <p className="text-[11px] text-gray-400">
+                  Suggested Meetup: SUB Building Quad, Campus Library, or School Park Gate.
+                </p>
+              </div>
+            </div>
+
+            {/* Safe Campus Wallet Payment Reassurance */}
+            <div className="bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 border border-amber-300/80 rounded-3xl p-5 space-y-2">
+              <div className="flex items-center gap-2">
+                <ShieldCheck size={18} className="text-amber-600 shrink-0" />
+                <h4 className="text-xs font-black text-amber-950">In-Chat Campus Wallet Protection</h4>
+              </div>
+              <p className="text-xs text-amber-900 leading-relaxed">
+                Message the seller first to inspect the item. Once satisfied in person, pay directly from your <strong>Campus Wallet</strong> inside the chat for instant, safe receipt!
               </p>
-            )}
-            <p className="text-[10px] text-gray-400">
-              Suggested Meetup: SUB Building Quad, Campus Library, or School Park Gate.
-            </p>
-          </div>
-        </div>
-
-        {/* Safe Campus Wallet Payment Reassurance */}
-        <div className="bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 border border-amber-300/80 rounded-2xl p-3.5 space-y-1">
-          <div className="flex items-center gap-2">
-            <ShieldCheck size={16} className="text-amber-600 shrink-0" />
-            <h4 className="text-xs font-black text-amber-950">In-Chat Campus Wallet Protection</h4>
-          </div>
-          <p className="text-[11px] text-amber-900 leading-snug">
-            Message the seller first to inspect the item. Once satisfied in person, pay directly from your <strong>Campus Wallet</strong> inside the chat for instant, safe receipt!
-          </p>
-          {user && (
-            <div className="pt-1.5 flex items-center justify-between text-[11px] border-t border-amber-200/60 text-amber-950 font-bold">
-              <span>Your Wallet Balance: ₦{Number(user.wallet_balance || 0).toLocaleString()}</span>
-              <Link to="/profile" className="text-amber-700 underline text-[10px]">
-                Manage Wallet
-              </Link>
-            </div>
-          )}
-        </div>
-
-        {/* Safe Meetup Protocol Card (POL-01, Section 7.3) */}
-        <div className="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-3.5">
-          <div className="flex items-start gap-2.5">
-            <ShieldCheck size={18} className="text-amber-600 shrink-0 mt-0.5" />
-            <div className="text-[11px] text-amber-950">
-              <p className="font-bold">Campus Safe Meetup Rules:</p>
-              <ul className="list-disc list-inside space-y-0.5 mt-1 text-amber-900 text-[10px]">
-                <li>Always meet during daylight hours at public spots (e.g. SUB, Library, Gate).</li>
-                <li>Inspect item thoroughly before exchanging cash or making transfer.</li>
-                <li>Never send an advance "booking fee" or transport deposit.</li>
-              </ul>
+              {user && (
+                <div className="pt-2 flex items-center justify-between text-xs border-t border-amber-200/60 text-amber-950 font-bold">
+                  <span>Your Wallet Balance: ₦{Number(user.wallet_balance || 0).toLocaleString()}</span>
+                  <Link to="/profile" className="text-amber-700 underline text-xs">
+                    Manage Wallet
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
-        </div>
-
-        {/* Report Listing Trigger */}
-        <div className="text-center pt-2">
-          <button
-            onClick={() => setShowReportModal(true)}
-            className="text-[11px] font-semibold text-gray-400 hover:text-red-500 inline-flex items-center gap-1 transition"
-          >
-            <Flag size={12} />
-            <span>Report this listing for safety or guideline violations</span>
-          </button>
         </div>
       </div>
 
-      {/* Sticky Bottom Action Bar */}
-      <div className="fixed bottom-16 left-0 right-0 max-w-md mx-auto bg-white/95 backdrop-blur-md border-t border-gray-200 px-4 py-3 z-40 flex items-center gap-3">
+      {/* Mobile Sticky Bottom Action Bar (Hidden on desktop) */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-200 px-4 py-3 z-40 flex items-center gap-3">
         <button
           onClick={handleToggleSave}
           className={`p-3 rounded-xl border transition ${isSaved ? 'border-red-200 bg-red-50 text-red-500' : 'border-gray-200 text-gray-600'}`}
@@ -466,6 +518,15 @@ export const ListingDetailPage = () => {
         >
           <MessageCircle size={16} />
           <span>{isUnavailable ? 'Listing Unavailable' : 'Message Seller / Make Offer'}</span>
+        </button>
+
+        <button
+          onClick={() => navigate(`/checkout/${listing.id}`)}
+          disabled={isUnavailable}
+          className="p-3 bg-emerald-600 text-white rounded-xl font-bold flex items-center justify-center"
+          title="Campus Checkout"
+        >
+          <ShoppingBag size={18} />
         </button>
       </div>
 

@@ -226,28 +226,30 @@ export const SellPage: React.FC = () => {
       <Header />
 
       {/* Navigation Sub-header */}
-      <div className="px-4 py-3 bg-white border-b border-gray-100 flex items-center justify-between sticky top-[72px] z-20">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-1 text-xs font-bold text-gray-600 hover:text-gray-900"
-        >
-          <ArrowLeft size={16} />
-          <span>Cancel</span>
-        </button>
-        <span className="text-xs font-black text-gray-900">
-          {editId ? 'Edit Listing & Photos' : 'List Item for Sale or Rent'}
-        </span>
-        <button
-          type="button"
-          onClick={() => setShowPreview(!showPreview)}
-          className="text-xs font-bold text-amber-600 hover:text-amber-700 inline-flex items-center gap-1"
-        >
-          <Eye size={13} />
-          <span>{showPreview ? 'Edit Form' : 'Preview'}</span>
-        </button>
+      <div className="bg-white border-b border-gray-100 sticky top-[72px] z-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-1 text-xs font-bold text-gray-600 hover:text-gray-900"
+          >
+            <ArrowLeft size={16} />
+            <span>Cancel</span>
+          </button>
+          <span className="text-xs font-black text-gray-900">
+            {editId ? 'Edit Listing & Photos' : 'List Item for Sale or Rent'}
+          </span>
+          <button
+            type="button"
+            onClick={() => setShowPreview(!showPreview)}
+            className="text-xs font-bold text-amber-600 hover:text-amber-700 inline-flex items-center gap-1"
+          >
+            <Eye size={13} />
+            <span>{showPreview ? 'Edit Form' : 'Preview'}</span>
+          </button>
+        </div>
       </div>
 
-      <div className="px-4 pt-4">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
         {/* Reward Prompt */}
         {!editId && (
           <div className="bg-amber-50 border border-amber-200 rounded-2xl p-3 flex items-center justify-between mb-4">

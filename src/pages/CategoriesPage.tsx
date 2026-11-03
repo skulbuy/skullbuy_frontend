@@ -84,235 +84,239 @@ export const CategoriesPage = () => {
       <Header onSearchSubmit={(q) => updateParam('search', q)} />
 
       {/* Sticky Filter & Sort bar */}
-      <div className="bg-white border-b border-gray-100 px-4 py-2.5 sticky top-[72px] z-30 flex items-center justify-between gap-2 shadow-2xs">
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-          <button
-            onClick={() => setShowFilterDrawer(true)}
-            className={`flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-xl border transition shrink-0 ${
-              hasActiveFilters ? 'bg-amber-500 text-white border-amber-500' : 'bg-gray-50 text-gray-700 border-gray-200'
-            }`}
-          >
-            <Filter size={13} />
-            <span>Filters</span>
-            {hasActiveFilters && <span className="w-1.5 h-1.5 rounded-full bg-white ml-0.5" />}
-          </button>
-
-          {/* Quick Category filter buttons */}
-          <button
-            onClick={() => {
-              const next = new URLSearchParams(searchParams);
-              next.delete('category');
-              next.delete('filter');
-              setSearchParams(next);
-            }}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition border shrink-0 ${
-              !activeCategory && !filter ? 'bg-gray-900 text-white border-gray-900' : 'bg-gray-50 text-gray-600 border-gray-200'
-            }`}
-          >
-            All Items
-          </button>
-
-          <button
-            onClick={() => {
-              if (filter === 'rentals') {
-                updateParam('filter', '');
-              } else {
-                updateParam('filter', 'rentals');
-              }
-            }}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition border shrink-0 ${
-              filter === 'rentals' ? 'bg-purple-600 text-white border-purple-600 shadow-xs' : 'bg-purple-50 text-purple-700 border-purple-200'
-            }`}
-          >
-            ⚡ Campus Rentals
-          </button>
-
-          {categories.map((c) => (
+      <div className="bg-white border-b border-gray-100 sticky top-[72px] z-30 shadow-2xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
             <button
-              key={c.id}
-              onClick={() => updateParam('category', c.slug)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition border shrink-0 ${
-                activeCategory === c.slug ? 'bg-amber-500 text-white border-amber-500' : 'bg-gray-50 text-gray-600 border-gray-200'
+              onClick={() => setShowFilterDrawer(true)}
+              className={`flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-xl border transition shrink-0 ${
+                hasActiveFilters ? 'bg-amber-500 text-white border-amber-500' : 'bg-gray-50 text-gray-700 border-gray-200'
               }`}
             >
-              {c.name}
+              <Filter size={13} />
+              <span>Filters</span>
+              {hasActiveFilters && <span className="w-1.5 h-1.5 rounded-full bg-white ml-0.5" />}
             </button>
-          ))}
-        </div>
-      </div>
 
-      {/* Active Filter Chips */}
-      {hasActiveFilters && (
-        <div className="px-4 pt-3 flex flex-wrap items-center gap-1.5">
-          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Active:</span>
-
-          {searchQuery && (
-            <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-800 text-[11px] font-semibold px-2 py-0.5 rounded-lg border border-amber-200">
-              "{searchQuery}"
-              <X size={11} className="cursor-pointer" onClick={() => updateParam('search', '')} />
-            </span>
-          )}
-
-          {activeCategory && (
-            <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-800 text-[11px] font-semibold px-2 py-0.5 rounded-lg border border-amber-200">
-              {categories.find(c => c.slug === activeCategory)?.name || activeCategory}
-              <X size={11} className="cursor-pointer" onClick={() => updateParam('category', '')} />
-            </span>
-          )}
-
-          {condition && (
-            <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-800 text-[11px] font-semibold px-2 py-0.5 rounded-lg border border-amber-200">
-              {condition}
-              <X size={11} className="cursor-pointer" onClick={() => updateParam('condition', '')} />
-            </span>
-          )}
-
-          {location && (
-            <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-800 text-[11px] font-semibold px-2 py-0.5 rounded-lg border border-amber-200">
-              {location}
-              <X size={11} className="cursor-pointer" onClick={() => updateParam('location', '')} />
-            </span>
-          )}
-
-          <button
-            onClick={clearAllFilters}
-            className="text-[11px] text-gray-500 hover:text-red-500 font-bold ml-1 inline-flex items-center gap-0.5"
-          >
-            <RotateCcw size={10} />
-            <span>Reset</span>
-          </button>
-        </div>
-      )}
-
-      {/* Results Header */}
-      <div className="px-4 pt-3 pb-1 flex items-center justify-between text-xs text-gray-500">
-        <span>
-          Showing <strong className="text-gray-900 font-bold">{listings.length}</strong> items on campus
-        </span>
-        <select
-          value={sort}
-          onChange={(e) => updateParam('sort', e.target.value)}
-          className="bg-transparent text-gray-700 font-bold text-xs outline-none cursor-pointer"
-        >
-          <option value="newest">Sort: Newest</option>
-          <option value="price_asc">Price: Low to High</option>
-          <option value="price_desc">Price: High to Low</option>
-        </select>
-      </div>
-
-      {/* Listings List (MKT-01) */}
-      <div className="px-4 mt-2">
-        {loading ? (
-          <div className="space-y-3">
-            {[1, 2, 3].map(n => (
-              <div key={n} className="bg-white rounded-2xl h-36 animate-pulse border border-gray-100" />
-            ))}
-          </div>
-        ) : error ? (
-          <div className="bg-white rounded-3xl p-8 text-center border border-red-100 shadow-2xs my-6">
-            <AlertCircle size={32} className="text-red-500 mx-auto mb-2" />
-            <h3 className="text-sm font-bold text-gray-900">Failed to load marketplace items</h3>
-            <p className="text-xs text-gray-500 mt-1">Please check your connection and retry.</p>
+            {/* Quick Category filter buttons */}
             <button
-              onClick={fetchListings}
-              className="mt-3 bg-amber-500 text-white text-xs font-bold px-4 py-2 rounded-xl"
+              onClick={() => {
+                const next = new URLSearchParams(searchParams);
+                next.delete('category');
+                next.delete('filter');
+                setSearchParams(next);
+              }}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition border shrink-0 ${
+                !activeCategory && !filter ? 'bg-gray-900 text-white border-gray-900' : 'bg-gray-50 text-gray-600 border-gray-200'
+              }`}
             >
-              Retry
+              All Items
             </button>
-          </div>
-        ) : listings.length === 0 ? (
-          // Honest empty state with root cause clarity (OBS-03, MKT-01)
-          <div className="bg-white rounded-3xl p-8 text-center border border-gray-100 shadow-2xs my-6">
-            <div className="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-3 text-amber-500">
-              <Search size={24} />
-            </div>
-            <h3 className="text-sm font-bold text-gray-900">No Listings Found</h3>
-            <p className="text-xs text-gray-500 mt-1 leading-relaxed max-w-xs mx-auto">
-              {hasActiveFilters 
-                ? 'No items matched your specific filter combination. Try clearing some filters.'
-                : 'There are currently no active listings published in this category yet.'}
-            </p>
 
-            <div className="flex justify-center gap-2 mt-4">
-              {hasActiveFilters && (
-                <button
-                  onClick={clearAllFilters}
-                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold px-4 py-2 rounded-xl transition"
-                >
-                  Clear Filters
-                </button>
-              )}
+            <button
+              onClick={() => {
+                if (filter === 'rentals') {
+                  updateParam('filter', '');
+                } else {
+                  updateParam('filter', 'rentals');
+                }
+              }}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition border shrink-0 ${
+                filter === 'rentals' ? 'bg-purple-600 text-white border-purple-600 shadow-xs' : 'bg-purple-50 text-purple-700 border-purple-200'
+              }`}
+            >
+              ⚡ Campus Rentals
+            </button>
+
+            {categories.map((c) => (
               <button
-                onClick={() => navigate('/sell')}
-                className="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-xl transition"
+                key={c.id}
+                onClick={() => updateParam('category', c.slug)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition border shrink-0 ${
+                  activeCategory === c.slug ? 'bg-amber-500 text-white border-amber-500' : 'bg-gray-50 text-gray-600 border-gray-200'
+                }`}
               >
-                Post New Item
+                {c.name}
               </button>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {listings.map((item) => (
-              <motion.div
-                key={item.id}
-                whileTap={{ scale: 0.99 }}
-                onClick={() => navigate(`/listing/${item.id}`)}
-                className="bg-white rounded-2xl overflow-hidden border border-gray-200/80 shadow-2xs hover:border-amber-300 transition cursor-pointer flex h-36"
-              >
-                <div className="w-32 bg-gray-100 relative shrink-0 overflow-hidden">
-                  <img
-                    src={item.image_url}
-                    alt={item.title}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                    onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=400&q=80'; }}
-                  />
-                  <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-xs text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
-                    {item.condition}
-                  </div>
-                  {item.is_rental ? (
-                    <div className="absolute bottom-2 left-2 bg-purple-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded uppercase">
-                      Rent
-                    </div>
-                  ) : null}
-                </div>
-
-                <div className="p-3.5 flex flex-col justify-between flex-1 min-w-0">
-                  <div>
-                    <div className="flex items-center justify-between text-[10px] text-gray-400 font-semibold mb-0.5">
-                      <span className="uppercase text-amber-600 font-bold">{item.category_name}</span>
-                      <span className="truncate max-w-[100px]">{item.campus_location.split(',')[0]}</span>
-                    </div>
-
-                    <h3 className="font-bold text-xs text-gray-900 line-clamp-2 leading-snug">
-                      {item.title}
-                    </h3>
-                  </div>
-
-                  <div className="pt-2 border-t border-gray-50 flex items-end justify-between">
-                    <div>
-                      <p className="text-base font-black text-gray-900 leading-none">
-                        ₦{Number(item.price).toLocaleString()}
-                      </p>
-                      {item.is_negotiable ? (
-                        <span className="text-[9px] text-emerald-600 font-bold">Negotiable</span>
-                      ) : (
-                        <span className="text-[9px] text-gray-400 font-medium">Fixed</span>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-1 text-[10px] text-gray-500">
-                      <span>{item.seller_name.split(' ')[0]}</span>
-                      {item.seller_verified === 'verified' && (
-                        <ShieldCheck size={12} className="text-emerald-600 shrink-0" />
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
             ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        {/* Active Filter Chips */}
+        {hasActiveFilters && (
+          <div className="pt-1 pb-3 flex flex-wrap items-center gap-1.5">
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Active:</span>
+
+            {searchQuery && (
+              <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-800 text-[11px] font-semibold px-2 py-0.5 rounded-lg border border-amber-200">
+                "{searchQuery}"
+                <X size={11} className="cursor-pointer" onClick={() => updateParam('search', '')} />
+              </span>
+            )}
+
+            {activeCategory && (
+              <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-800 text-[11px] font-semibold px-2 py-0.5 rounded-lg border border-amber-200">
+                {categories.find(c => c.slug === activeCategory)?.name || activeCategory}
+                <X size={11} className="cursor-pointer" onClick={() => updateParam('category', '')} />
+              </span>
+            )}
+
+            {condition && (
+              <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-800 text-[11px] font-semibold px-2 py-0.5 rounded-lg border border-amber-200">
+                {condition}
+                <X size={11} className="cursor-pointer" onClick={() => updateParam('condition', '')} />
+              </span>
+            )}
+
+            {location && (
+              <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-800 text-[11px] font-semibold px-2 py-0.5 rounded-lg border border-amber-200">
+                {location}
+                <X size={11} className="cursor-pointer" onClick={() => updateParam('location', '')} />
+              </span>
+            )}
+
+            <button
+              onClick={clearAllFilters}
+              className="text-[11px] text-gray-500 hover:text-red-500 font-bold ml-1 inline-flex items-center gap-0.5"
+            >
+              <RotateCcw size={10} />
+              <span>Reset</span>
+            </button>
           </div>
         )}
+
+        {/* Results Header */}
+        <div className="pt-1 pb-3 flex items-center justify-between text-xs text-gray-500">
+          <span>
+            Showing <strong className="text-gray-900 font-bold">{listings.length}</strong> items on campus
+          </span>
+          <select
+            value={sort}
+            onChange={(e) => updateParam('sort', e.target.value)}
+            className="bg-transparent text-gray-700 font-bold text-xs outline-none cursor-pointer"
+          >
+            <option value="newest">Sort: Newest</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+          </select>
+        </div>
+
+        {/* Listings Grid (Responsive on Mobile & Desktop) */}
+        <div>
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {[1, 2, 3, 4, 5, 6].map(n => (
+                <div key={n} className="bg-white rounded-2xl h-56 animate-pulse border border-gray-100" />
+              ))}
+            </div>
+          ) : error ? (
+            <div className="bg-white rounded-3xl p-8 text-center border border-red-100 shadow-2xs my-6 max-w-md mx-auto">
+              <AlertCircle size={32} className="text-red-500 mx-auto mb-2" />
+              <h3 className="text-sm font-bold text-gray-900">Failed to load marketplace items</h3>
+              <p className="text-xs text-gray-500 mt-1">Please check your connection and retry.</p>
+              <button
+                onClick={fetchListings}
+                className="mt-3 bg-amber-500 text-white text-xs font-bold px-4 py-2 rounded-xl"
+              >
+                Retry
+              </button>
+            </div>
+          ) : listings.length === 0 ? (
+            <div className="bg-white rounded-3xl p-8 text-center border border-gray-100 shadow-2xs my-6 max-w-md mx-auto">
+              <div className="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-3 text-amber-500">
+                <Search size={24} />
+              </div>
+              <h3 className="text-sm font-bold text-gray-900">No Listings Found</h3>
+              <p className="text-xs text-gray-500 mt-1 leading-relaxed max-w-xs mx-auto">
+                {hasActiveFilters 
+                  ? 'No items matched your specific filter combination. Try clearing some filters.'
+                  : 'There are currently no active listings published in this category yet.'}
+              </p>
+
+              <div className="flex justify-center gap-2 mt-4">
+                {hasActiveFilters && (
+                  <button
+                    onClick={clearAllFilters}
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold px-4 py-2 rounded-xl transition"
+                  >
+                    Clear Filters
+                  </button>
+                )}
+                <button
+                  onClick={() => navigate('/sell')}
+                  className="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-xl transition"
+                >
+                  Post New Item
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {listings.map((item) => (
+                <motion.div
+                  key={item.id}
+                  whileHover={{ y: -3 }}
+                  whileTap={{ scale: 0.99 }}
+                  onClick={() => navigate(`/listing/${item.id}`)}
+                  className="bg-white rounded-2xl overflow-hidden border border-gray-200/80 shadow-2xs hover:border-amber-300 hover:shadow-md transition cursor-pointer flex sm:flex-col h-36 sm:h-auto"
+                >
+                  <div className="w-32 sm:w-full sm:h-48 bg-gray-100 relative shrink-0 overflow-hidden">
+                    <img
+                      src={item.image_url}
+                      alt={item.title}
+                      className="w-full h-full object-cover transition duration-300 hover:scale-105"
+                      loading="lazy"
+                      onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=400&q=80'; }}
+                    />
+                    <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-xs text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
+                      {item.condition}
+                    </div>
+                    {item.is_rental ? (
+                      <div className="absolute bottom-2 left-2 bg-purple-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded uppercase">
+                        Rent
+                      </div>
+                    ) : null}
+                  </div>
+
+                  <div className="p-3.5 flex flex-col justify-between flex-1 min-w-0">
+                    <div>
+                      <div className="flex items-center justify-between text-[10px] text-gray-400 font-semibold mb-0.5">
+                        <span className="uppercase text-amber-600 font-bold">{item.category_name}</span>
+                        <span className="truncate max-w-[100px]">{item.campus_location.split(',')[0]}</span>
+                      </div>
+
+                      <h3 className="font-bold text-xs sm:text-sm text-gray-900 line-clamp-2 leading-snug">
+                        {item.title}
+                      </h3>
+                    </div>
+
+                    <div className="pt-2 sm:pt-3 border-t border-gray-50 flex items-end justify-between mt-2">
+                      <div>
+                        <p className="text-base sm:text-lg font-black text-gray-900 leading-none">
+                          ₦{Number(item.price).toLocaleString()}
+                        </p>
+                        {item.is_negotiable ? (
+                          <span className="text-[9px] text-emerald-600 font-bold">Negotiable</span>
+                        ) : (
+                          <span className="text-[9px] text-gray-400 font-medium">Fixed</span>
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-1 text-[10px] text-gray-500">
+                        <span>{item.seller_name.split(' ')[0]}</span>
+                        {item.seller_verified === 'verified' && (
+                          <ShieldCheck size={12} className="text-emerald-600 shrink-0" />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Filter Drawer / Modal */}

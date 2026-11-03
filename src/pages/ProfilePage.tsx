@@ -441,7 +441,8 @@ export const ProfilePage = () => {
       <Header />
 
       {/* Profile Header */}
-      <div className="bg-white px-4 pt-5 pb-5 border-b border-gray-100 shadow-2xs">
+      <div className="bg-white border-b border-gray-100 shadow-2xs">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-5">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white flex items-center justify-center font-black text-xl shadow-sm overflow-hidden shrink-0">
@@ -610,54 +611,57 @@ export const ProfilePage = () => {
             <p className={`text-xs font-black mt-0.5 ${activeTab === 'saved' ? 'text-white' : 'text-gray-900'}`}>{savedItems.length}</p>
           </div>
         </div>
+        </div>
       </div>
 
       {/* Tabs navigation */}
-      <div className="flex bg-white border-b border-gray-200 px-3 text-xs font-bold overflow-x-auto no-scrollbar">
-        <button
-          onClick={() => setActiveTab('wallet')}
-          className={`py-3 px-3 border-b-2 transition whitespace-nowrap flex items-center gap-1.5 ${
-            activeTab === 'wallet' ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-500 hover:text-gray-800'
-          }`}
-        >
-          <Wallet size={14} />
-          <span>Campus Wallet</span>
-        </button>
-        <button
-          onClick={() => setActiveTab('listings')}
-          className={`py-3 px-3 border-b-2 transition whitespace-nowrap ${
-            activeTab === 'listings' ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-500 hover:text-gray-800'
-          }`}
-        >
-          My Listings ({myListings.length})
-        </button>
-        <button
-          onClick={() => setActiveTab('saved')}
-          className={`py-3 px-3 border-b-2 transition whitespace-nowrap ${
-            activeTab === 'saved' ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-500 hover:text-gray-800'
-          }`}
-        >
-          Saved ({savedItems.length})
-        </button>
-        <button
-          onClick={() => setActiveTab('points')}
-          className={`py-3 px-3 border-b-2 transition whitespace-nowrap ${
-            activeTab === 'points' ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-500 hover:text-gray-800'
-          }`}
-        >
-          Points Wallet
-        </button>
-        <button
-          onClick={() => setActiveTab('settings')}
-          className={`py-3 px-3 border-b-2 transition whitespace-nowrap ${
-            activeTab === 'settings' ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-500 hover:text-gray-800'
-          }`}
-        >
-          Account
-        </button>
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex text-xs font-bold overflow-x-auto no-scrollbar">
+          <button
+            onClick={() => setActiveTab('wallet')}
+            className={`py-3 px-3 border-b-2 transition whitespace-nowrap flex items-center gap-1.5 ${
+              activeTab === 'wallet' ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-500 hover:text-gray-800'
+            }`}
+          >
+            <Wallet size={14} />
+            <span>Campus Wallet</span>
+          </button>
+          <button
+            onClick={() => setActiveTab('listings')}
+            className={`py-3 px-3 border-b-2 transition whitespace-nowrap ${
+              activeTab === 'listings' ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-500 hover:text-gray-800'
+            }`}
+          >
+            My Listings ({myListings.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('saved')}
+            className={`py-3 px-3 border-b-2 transition whitespace-nowrap ${
+              activeTab === 'saved' ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-500 hover:text-gray-800'
+            }`}
+          >
+            Saved ({savedItems.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('points')}
+            className={`py-3 px-3 border-b-2 transition whitespace-nowrap ${
+              activeTab === 'points' ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-500 hover:text-gray-800'
+            }`}
+          >
+            Points Wallet
+          </button>
+          <button
+            onClick={() => setActiveTab('settings')}
+            className={`py-3 px-3 border-b-2 transition whitespace-nowrap ${
+              activeTab === 'settings' ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-500 hover:text-gray-800'
+            }`}
+          >
+            Account
+          </button>
+        </div>
       </div>
 
-      <div className="px-4 pt-4">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Tab 0: Campus Wallet */}
         {activeTab === 'wallet' && (
           <div className="space-y-4">

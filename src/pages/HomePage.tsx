@@ -72,11 +72,11 @@ export const HomePage = () => {
     <div className="pb-28 min-h-screen bg-gray-50/60">
       <Header />
 
-      <main className="px-4 pt-3 space-y-5">
+      <main className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-4 pb-20 space-y-7">
         {/* Personalised Student Greeting Banner */}
-        <section className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 rounded-2xl p-3 text-slate-950 shadow-xs flex items-center justify-between">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-10 h-10 rounded-full bg-white p-0.5 shrink-0 overflow-hidden shadow-xs">
+        <section className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 rounded-2xl p-4 sm:p-5 text-slate-950 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-12 h-12 rounded-full bg-white p-0.5 shrink-0 overflow-hidden shadow-xs">
               <img
                 src={user?.profile_picture || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'}
                 alt=""
@@ -85,26 +85,26 @@ export const HomePage = () => {
               />
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] font-bold text-slate-900/80 uppercase tracking-wider">
+              <p className="text-[10px] sm:text-xs font-bold text-slate-900/80 uppercase tracking-wider">
                 {user?.campus_name || user?.campus || currentUniversity} Student
               </p>
-              <h2 className="text-sm font-black text-white truncate">
+              <h2 className="text-base sm:text-lg font-black text-white truncate">
                 {user?.first_name ? `Welcome back, ${user.first_name}!` : `Welcome to SkulBuy, Scholar! 🎓`}
               </h2>
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 shrink-0">
+          <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
             <Link
               to="/meetups"
-              className="bg-black/20 hover:bg-black/30 text-white text-[10px] font-bold px-2 py-1 rounded-lg transition flex items-center gap-1"
+              className="bg-black/20 hover:bg-black/30 text-white text-xs font-bold px-3 py-1.5 rounded-xl transition flex items-center gap-1.5"
             >
               <span>Meetups</span>
-              <span className="bg-amber-400 text-black text-[8px] font-black px-1 rounded">Soon</span>
+              <span className="bg-amber-400 text-black text-[9px] font-black px-1.5 py-0.5 rounded">Soon</span>
             </Link>
             <Link
               to="/sell"
-              className="bg-slate-950 hover:bg-slate-900 text-amber-300 text-[10px] font-black px-2.5 py-1 rounded-lg shadow-xs transition"
+              className="bg-slate-950 hover:bg-slate-900 text-amber-300 text-xs font-black px-3.5 py-1.5 rounded-xl shadow-xs transition"
             >
               + Sell / Rent
             </Link>
@@ -191,9 +191,9 @@ export const HomePage = () => {
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-2 gap-3">
-              {[1, 2].map(n => (
-                <div key={n} className="bg-white rounded-2xl h-44 animate-pulse border border-gray-100" />
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4.5">
+              {[1, 2, 3, 4, 5].map(n => (
+                <div key={n} className="bg-white rounded-2xl h-52 animate-pulse border border-gray-100" />
               ))}
             </div>
           ) : campusListings.length === 0 ? (
@@ -204,20 +204,20 @@ export const HomePage = () => {
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-3">
-              {campusListings.slice(0, 4).map((item) => (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4.5">
+              {campusListings.slice(0, 10).map((item) => (
                 <motion.div
                   key={item.id}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => navigate(`/listing/${item.id}`)}
-                  className="bg-white rounded-2xl overflow-hidden border border-gray-200/80 shadow-2xs hover:border-amber-300 transition cursor-pointer flex flex-col justify-between"
+                  className="bg-white rounded-2xl overflow-hidden border border-gray-200/80 shadow-2xs hover:border-amber-400 hover:shadow-md transition cursor-pointer flex flex-col justify-between"
                 >
                   <div>
-                    <div className="h-32 bg-gray-100 relative overflow-hidden">
+                    <div className="h-36 sm:h-44 md:h-48 bg-gray-100 relative overflow-hidden">
                       <img
                         src={item.image_url}
                         alt={item.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                         loading="lazy"
                       />
                       <div className="absolute top-2 left-2 bg-amber-500 text-white text-[8px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider shadow-xs">
@@ -387,19 +387,19 @@ export const HomePage = () => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            {trendingListings.slice(0, 4).map((item) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4.5">
+            {trendingListings.slice(0, 10).map((item) => (
               <div
                 key={item.id}
                 onClick={() => navigate(`/listing/${item.id}`)}
-                className="bg-white rounded-2xl overflow-hidden border border-gray-200/80 shadow-2xs hover:border-amber-300 transition cursor-pointer flex flex-col justify-between"
+                className="bg-white rounded-2xl overflow-hidden border border-gray-200/80 shadow-2xs hover:border-amber-400 hover:shadow-md transition cursor-pointer flex flex-col justify-between"
               >
                 <div>
-                  <div className="h-32 bg-gray-100 relative overflow-hidden">
+                  <div className="h-36 sm:h-44 md:h-48 bg-gray-100 relative overflow-hidden">
                     <img
                       src={item.image_url}
                       alt={item.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                       loading="lazy"
                     />
                     <div className="absolute top-2 right-2 bg-emerald-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-wider shadow-xs">
@@ -576,19 +576,19 @@ export const HomePage = () => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4.5">
             {recentListings.map((item) => (
               <div
                 key={item.id}
                 onClick={() => navigate(`/listing/${item.id}`)}
-                className="bg-white rounded-2xl overflow-hidden border border-gray-200/70 shadow-2xs hover:border-amber-300 transition cursor-pointer flex flex-col justify-between"
+                className="bg-white rounded-2xl overflow-hidden border border-gray-200/70 shadow-2xs hover:border-amber-400 hover:shadow-md transition cursor-pointer flex flex-col justify-between"
               >
                 <div>
-                  <div className="h-32 bg-gray-100 relative overflow-hidden">
+                  <div className="h-36 sm:h-44 md:h-48 bg-gray-100 relative overflow-hidden">
                     <img
                       src={item.image_url}
                       alt={item.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                       loading="lazy"
                     />
                     <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-xs text-white text-[9px] font-semibold px-1.5 py-0.5 rounded">
