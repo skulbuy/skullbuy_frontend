@@ -7,7 +7,10 @@ dotenv.config();
 
 const PORT = Number(process.env.PORT) || 3000;
 const LIVE_BACKEND_URL = (
-  process.env.VITE_API_BASE_URL || 'https://skulbuy-backend-f36c6.containers.snapdeploy.app'
+  process.env.VITE_API_BASE_URL ||
+  process.env.VITE_BACKEND_URL ||
+  process.env.BACKEND_URL ||
+  'http://127.0.0.1:8000'
 ).replace(/\/$/, '');
 
 async function startServer() {
@@ -36,7 +39,11 @@ async function startServer() {
       };
 
       if (!['GET', 'HEAD'].includes(req.method) && req.body && Object.keys(req.body).length > 0) {
-        fetchOptions.body = JSON.stringify(req.body);
+        if (headers['Content-Type']?.includes('application/x-www-form-urlencoded')) {
+          fetchOptions.body = new URLSearchParams(req.body).toString();
+        } else {
+          fetchOptions.body = JSON.stringify(req.body);
+        }
       }
 
       const upstreamRes = await fetch(targetUrl, fetchOptions);

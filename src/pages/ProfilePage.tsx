@@ -71,15 +71,15 @@ export const ProfilePage = () => {
       setSelectedUni(user.university || 'FUTMINNA');
       setLoadingData(true);
       Promise.all([
-        authFetch('/api/users/profile').then(res => res.json()),
-        authFetch('/api/saved').then(res => res.json()),
-        authFetch('/api/wallet/transactions').then(res => res.json()),
-        authFetch('/api/messages/unread-summary').then(res => res.json()).catch(() => ({ privateChats: 0, communities: 0, total: 0 }))
+        authFetch('/api/users/profile').then(res => res.ok ? res.json() : null).catch(() => null),
+        authFetch('/api/saved').then(res => res.ok ? res.json() : []).catch(() => []),
+        authFetch('/api/wallet/transactions').then(res => res.ok ? res.json() : null).catch(() => null),
+        authFetch('/api/messages/unread-summary').then(res => res.ok ? res.json() : null).catch(() => ({ privateChats: 0, communities: 0, total: 0 }))
       ]).then(([profileData, savedData, walletData, unreadData]) => {
-        setMyListings(profileData.listings || []);
-        setPointsHistory(profileData.points_history || []);
+        setMyListings(Array.isArray(profileData?.listings) ? profileData.listings : []);
+        setPointsHistory(Array.isArray(profileData?.points_history) ? profileData.points_history : []);
         setSavedItems(Array.isArray(savedData) ? savedData : []);
-        setWalletTransactions(walletData.transactions || []);
+        setWalletTransactions(Array.isArray(walletData?.transactions) ? walletData.transactions : (Array.isArray(walletData) ? walletData : []));
         if (unreadData) setUnreadSummary(unreadData);
         setLoadingData(false);
       }).catch(err => {
@@ -98,8 +98,8 @@ export const ProfilePage = () => {
   const reloadWallet = async () => {
     try {
       const res = await authFetch('/api/wallet/transactions');
-      const data = await res.json();
-      setWalletTransactions(data.transactions || []);
+      const data = await res.json().catch(() => ({}));
+      setWalletTransactions(Array.isArray(data?.transactions) ? data.transactions : (Array.isArray(data) ? data : []));
       await refreshUser();
     } catch (e) {
       console.error(e);
@@ -256,8 +256,8 @@ export const ProfilePage = () => {
             </div>
 
             {authError && (
-              <div className="bg-red-50 text-red-600 text-xs p-3 rounded-xl mb-4 border border-red-100">
-                {authError}
+              <div className="bg-red-50 text-red-600 text-xs p-3 rounded-xl mb-4 border border-red-100 font-medium">
+                {typeof authError === 'string' ? authError : JSON.stringify(authError)}
               </div>
             )}
 

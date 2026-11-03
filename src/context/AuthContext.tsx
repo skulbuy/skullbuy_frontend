@@ -28,6 +28,26 @@ interface AuthContextType {
   completeOnboarding: (data: any) => Promise<{ success: boolean; bonusAwarded?: number; user?: User; error?: string }>;
 }
 
+export function extractErrorMessage(data: any, fallback = 'An error occurred'): string {
+  if (!data) return fallback;
+  if (typeof data === 'string') return data;
+  if (typeof data.detail === 'string') return data.detail;
+  if (Array.isArray(data.detail)) {
+    return data.detail
+      .map((item: any) => {
+        if (typeof item === 'string') return item;
+        return item.msg || item.message || JSON.stringify(item);
+      })
+      .join('; ');
+  }
+  if (data.detail && typeof data.detail === 'object') {
+    return data.detail.msg || data.detail.message || JSON.stringify(data.detail);
+  }
+  if (typeof data.error === 'string') return data.error;
+  if (typeof data.message === 'string') return data.message;
+  return fallback;
+}
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 function normalizeUser(data: any, fallbackEmail = ''): User {
@@ -103,28 +123,47 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password?: string) => {
     try {
-      const res = await fetch('/api/auth/login', {
+      const loginId = email.trim();
+      const pwd = password || '';
+
+      // Try standard JSON first
+      let res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: email.trim(),
-          username: email.trim(),
-          password: password || '',
+          email: loginId,
+          username: loginId,
+          password: pwd,
         }),
       });
-      const data = await res.json();
+
+      // If backend expects standard OAuth2 URL-encoded form data (422)
+      if (res.status === 422) {
+        const formBody = new URLSearchParams();
+        formBody.append('username', loginId);
+        formBody.append('password', pwd);
+        res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: formBody.toString(),
+        });
+      }
+
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        return { success: false, error: data.detail || data.error || 'Invalid email or password' };
+        return { success: false, error: extractErrorMessage(data, 'Invalid email or password') };
       }
       const tokenVal = data.access_token || data.token;
-      localStorage.setItem('skulbuy_token', tokenVal);
-      setToken(tokenVal);
+      if (tokenVal) {
+        localStorage.setItem('skulbuy_token', tokenVal);
+        setToken(tokenVal);
+      }
 
       const u = data.user || data;
       setUser(normalizeUser(u, email));
       return { success: true };
     } catch {
-      return { success: false, error: 'Network error occurred during login' };
+      return { success: false, error: 'Network error occurred during login. Please try again.' };
     }
   };
 
@@ -166,9 +205,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        return { success: false, error: data.detail || data.error || 'Registration failed' };
+        return { success: false, error: extractErrorMessage(data, 'Registration failed') };
       }
 
       const tokenVal = data.access_token || data.token;
@@ -182,7 +221,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(userData);
       return { success: true, token: tokenVal, user: userData };
     } catch {
-      return { success: false, error: 'Network error occurred during registration' };
+      return { success: false, error: 'Network error occurred during registration. Please try again.' };
     }
   };
 
@@ -193,11 +232,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         return {
           success: false,
-          error: data.detail || data.error || 'Failed to send OTP code',
+          error: extractErrorMessage(data, 'Failed to send OTP code'),
           cooldownSeconds: data.cooldownSeconds,
         };
       }
@@ -214,9 +253,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, code }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        return { success: false, error: data.detail || data.error || 'Invalid verification code' };
+        return { success: false, error: extractErrorMessage(data, 'Invalid verification code') };
       }
       return { success: true };
     } catch {
@@ -231,9 +270,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        return { success: false, error: data.detail || data.error || 'Failed to complete onboarding' };
+        return { success: false, error: extractErrorMessage(data, 'Failed to complete onboarding') };
       }
       if (data.token) {
         localStorage.setItem('skulbuy_token', data.token);
