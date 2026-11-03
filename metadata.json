@@ -1,0 +1,9 @@
+{
+  "name": "SkulBuy",
+  "description": "A student-focused classified marketplace and savings platform for campus communities.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}

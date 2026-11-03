@@ -1,0 +1,774 @@
+# SKULBUY PLATFORM UPGRADE 2.0
+## Onboarding, University Discovery, ₦500 Signup Bonus, Product Uploads, Campus Meetups and Skully AI Assistant
+
+**Role:** Act as a senior full-stack engineer, product designer, UX strategist and AI integration specialist.
+
+You are working on the existing SkulBuy application. Your task is to implement the following improvements directly into the current application, preserving all working features and existing integrations.
+
+This is an enhancement of the existing product, not a request to build another application.
+
+The overall vision is to position SkulBuy as a Nigerian university marketplace where students can buy, sell and rent products across universities, discover opportunities, connect with other students and participate in campus activities.
+
+# 1. HEADER UPDATE: REMOVE WALLET AMOUNT
+
+Make a small but important adjustment to the application's header.
+
+Currently, the wallet amount is displayed at the top of the header.
+
+Remove the wallet amount from the header completely.
+
+Instead:
+- Keep the wallet and SkulCredits information inside the Account section.
+- Preserve its current presentation in the Account section.
+- Do not remove, reset or alter existing wallet balances.
+- Do not remove access to wallet transactions or account history.
+- Keep the header clean and focused on the SkulBuy logo, search, navigation, notifications and account access.
+
+The wallet must remain accessible through the Account page.
+
+# 2. REDESIGN THE ONBOARDING EXPERIENCE
+
+The onboarding experience needs to be redesigned to introduce SkulBuy properly to new users.
+
+When a completely new user opens the application, they should not immediately be taken to an empty marketplace or generic dashboard.
+
+They should first experience a welcoming onboarding interface.
+
+### Screen 1: Welcome to SkulBuy
+
+Create a visually engaging introductory page with the headline:
+
+**BUY. SELL. RENT. ANYTHING.**
+
+Supporting text:
+
+Discover products, find great deals, sell what you no longer need and rent what you need. Connect with students and discover opportunities across Nigerian universities.
+
+Make it clear that SkulBuy is available to students across Nigerian universities, not just FUTMINNA or any single institution.
+
+Include:
+- Official SkulBuy logo.
+- Attractive student lifestyle photography.
+- Prominent Get Started button.
+- Sign In option for existing users.
+- A clean, modern, youthful design.
+- Responsive desktop and mobile layouts.
+
+Use realistic Nigerian university student imagery. Do not leave image placeholders empty.
+
+The welcome screen should communicate that SkulBuy is a marketplace for students across Nigeria.
+
+### Screen 2: Authentication
+
+After selecting Get Started, take the user to account registration.
+
+Provide:
+- Sign Up.
+- Sign In.
+- Email registration.
+- Supported existing authentication options.
+- Password and confirmation fields where appropriate.
+- Password visibility control.
+- Form validation.
+- Clear error and success messages.
+
+Users who already have accounts should be able to sign in without having to complete registration again.
+
+Returning authenticated users should go directly to the application rather than repeatedly seeing onboarding.
+
+### Screen 3: Where Do You Study?
+
+After registration, ask:
+
+**Where do you study?**
+
+Supporting text:
+
+Choose your university to discover products, vendors, campus activities and student communities around you.
+
+This must be a searchable university-selection experience.
+
+Include universities from across Nigeria, covering:
+- Federal universities.
+- State universities.
+- Private universities.
+
+Do not restrict the selection to a few popular institutions.
+
+### Nigerian university database
+
+Build a comprehensive, maintainable university database using the latest official recognised-university information from the Nigerian Universities Commission (NUC).
+
+Do not manually hardcode only a handful of universities.
+
+The database should include:
+
+- University name.
+- Official abbreviation or commonly used acronym.
+- Institution type.
+- State.
+- City or town.
+- Campus locations.
+- Campus coordinates where available.
+- Institution status.
+- Active or inactive status.
+
+Account for universities that have multiple campuses.
+
+Allow administrators to add, update and deactivate university records without requiring a new application deployment.
+
+The selection interface should support:
+- Search by university name.
+- Search by abbreviation.
+- Filter by state.
+- Filter by institution type.
+- View popular or recently selected universities.
+- Select a campus where an institution has multiple campuses.
+
+### IP-based university suggestion
+
+Integrate IP-based geolocation to make university selection easier.
+
+When a new user reaches the university-selection screen:
+
+1. Use an IP geolocation service to estimate their location.
+2. Identify their approximate country, state and city where supported.
+3. Match that approximate location against available Nigerian universities.
+4. Suggest likely universities in the area.
+5. Display the suggestions as convenient selectable options.
+6. Allow the student to search for and select any other university.
+
+For example, a student accessing SkulBuy from Minna may be shown FUTMINNA as a suggested institution.
+
+However, IP geolocation must only be used to suggest universities, not automatically determine where someone studies. People can access the internet from locations far from their university, and IP data cannot reliably identify an exact campus.
+
+Provide a manual selection option at all times.
+
+Where appropriate, offer browser geolocation with the user's permission. Make the location request transparent and explain why it is being used.
+
+Do not block registration when location services are unavailable or declined.
+
+# 3. SCREEN 4: ACCOUNT SETUP
+
+After university selection, take the user to account setup.
+
+Create a clean profile setup page that collects the necessary student information.
+
+Fields should include:
+
+- First name.
+- Last name.
+- Username.
+- Profile picture.
+- University.
+- Campus.
+- Department or course of study, where applicable.
+- Level of study, where applicable.
+- Phone number, where required by existing platform features.
+
+Allow students to upload a profile photograph or select a suitable default avatar.
+
+The profile should be editable later from the Account section.
+
+Avoid requesting unnecessary information during registration.
+
+Show an onboarding progress indicator so students understand how far they are from completing setup.
+
+After successful setup, show a welcome message and take the student to their personalised SkulBuy homepage.
+
+# 4. ₦500 NEW USER SIGNUP BONUS
+
+Introduce a new user welcome reward.
+
+Every eligible new user who successfully completes registration and account setup should receive:
+
+<escape>₦500</escape> in SkulCredits.
+
+Display a welcome notification:
+
+**Welcome to SkulBuy!**
+
+You've received ₦500 in SkulCredits to get started. Explore the marketplace and discover what your campus has to offer.
+
+### Technical requirements
+
+- Credit the reward automatically after successful account setup.
+- Record the transaction in the SkulCredits ledger.
+- Display the transaction in the student's account history.
+- Prevent duplicate credits.
+- Ensure one eligible signup bonus per account.
+- Protect against duplicate registrations and basic reward abuse.
+- Use secure backend processing.
+- Make the reward idempotent.
+- Ensure frontend manipulation cannot generate credits.
+
+Treat this as an in-app SkulCredits promotional reward, using the existing SkulCredits rules. Do not create a separate wallet or silently convert promotional credits into withdrawable cash.
+
+Display the ₦500 reward clearly in the student's Account and SkulCredits sections.
+
+Keep the existing daily streak reward of ₦10 per qualifying daily visit intact. Do not allow this new signup bonus to interfere with existing reward calculations.
+
+# 5. REMOVE EMPTY IMAGE PLACEHOLDERS THROUGHOUT THE APP
+
+Review the entire application and ensure there are no empty image placeholders.
+
+This includes:
+- Homepage banners.
+- Product cards.
+- Product detail pages.
+- Category sections.
+- Vendor profiles.
+- User profile images.
+- University and campus cards.
+- Community pages.
+- Featured products.
+- Meetup cards.
+- Promotional banners.
+- Chat avatars.
+- Skully chatbot avatar.
+- Empty states and promotional sections.
+
+Use available real product images and relevant realistic photography.
+
+Where actual product photography is unavailable, use an appropriate category-specific fallback image rather than a blank white box or broken image icon.
+
+All images must:
+- Load correctly.
+- Maintain their aspect ratios.
+- Have appropriate cropping.
+- Be responsive.
+- Use suitable fallback behaviour.
+- Avoid stretching or distortion.
+
+Do not insert random images that misrepresent the actual product being sold.
+
+Prioritise genuine product images uploaded by sellers.
+
+# 6. FIX PRODUCT IMAGE UPLOAD AND REPLACEMENT
+
+There is currently a problem in the Add New Product section.
+
+When attempting to add or update a product image, the interface appears to show the current image without providing a functional replacement process.
+
+Fix this properly.
+
+### Required functionality
+
+When adding a new product:
+
+- Provide a clear image upload area.
+- Allow users to select images from their devices.
+- Display image previews before submission.
+- Allow multiple product images where supported.
+- Allow users to remove selected images.
+- Display uploading progress.
+- Show successful upload confirmation.
+- Save uploaded images to the existing application storage system.
+- Ensure uploaded images persist after refreshing the page.
+
+When editing an existing product:
+
+- Display the currently saved image.
+- Include a clearly visible Replace Image button.
+- Allow the seller to select a new image.
+- Display a preview of the replacement.
+- Allow the seller to remove an image if appropriate.
+- Save the new image and update the existing product record.
+- Ensure the new image replaces the old image in all relevant product displays.
+
+Do not require users to delete an existing product before they can change its photograph.
+
+Support common image formats such as JPG, JPEG, PNG and WebP.
+
+Implement file-size validation, image optimisation, upload error handling and appropriate storage permissions.
+
+For multiple product images, allow sellers to select a primary image and rearrange the remaining images where practical.
+
+Make sure the same image update is reflected across:
+- Marketplace cards.
+- Product details.
+- Search results.
+- Featured listings.
+- Vendor storefronts.
+- Related product sections.
+
+Do not use local-only image previews as a substitute for saving the actual image to persistent storage.
+
+# 7. UPDATE CAMPUS LOCATIONS ACROSS NIGERIA
+
+Expand the Campus Locations functionality to cover Nigerian universities nationwide.
+
+Currently, campus locations are limited and need to be expanded.
+
+Create a centralised university and campus location database.
+
+Each location should be associated with its relevant university and contain:
+
+- University name.
+- Campus name.
+- State.
+- City or town.
+- Location coordinates where available.
+- Location description.
+- Active status.
+
+Support multiple campuses for universities that operate across different locations.
+
+When a student registers and selects their university, use that information to personalise the campus location displayed in the application.
+
+Allow students to view other universities and campus locations too.
+
+Add search and filter options to help students find locations around different universities.
+
+Do not make the location system dependent on a single university.
+
+# 8. POPULAR MEETUPS ACROSS NIGERIAN UNIVERSITIES
+
+Improve the existing Meetups section.
+
+The goal is to help students discover activities, events, gatherings and opportunities taking place within their universities and across other Nigerian campuses.
+
+Create a more useful and engaging Meetups discovery experience.
+
+### Meetup categories
+
+Include:
+- Student networking events.
+- Entrepreneurial meetups.
+- Business and trade events.
+- Technology and innovation events.
+- Student association activities.
+- Academic and educational events.
+- Career and internship events.
+- Social gatherings.
+- Sports and recreational activities.
+- Campus exhibitions and fairs.
+
+### Popular Meetups
+
+Introduce a section titled:
+
+**Popular Across Nigerian Campuses**
+
+This section should display genuinely available and relevant meetups from different universities.
+
+Each card should contain:
+- Meetup title.
+- Event image.
+- University or campus.
+- Date and time.
+- Location.
+- Short description.
+- Number of interested or registered participants where available.
+- Join or View Details button.
+
+Use actual meetup records submitted by users, organisers or administrators. Do not generate fake events, fabricated attendance numbers or fictional popularity statistics.
+
+Allow administrators to feature selected events.
+
+### Suggested Meetups
+
+Introduce a personalised section titled:
+
+**Suggested Meetups for You**
+
+Recommendations should consider:
+
+1. The student's selected university.
+2. Their campus.
+3. Their approximate location, where permission is granted.
+4. Meetup categories they have indicated interest in.
+5. Upcoming event dates.
+6. Actual event activity and popularity.
+7. Relevant events from nearby universities.
+
+Give priority to events within the student's university before showing nearby or nationwide opportunities.
+
+# 9. UPDATE THE PROXIMITY AND NEARBY DISCOVERY SYSTEM
+
+Improve the existing proximity area and suggested meetups functionality.
+
+The current proximity experience should be more relevant and accurate.
+
+Use the following approach:
+
+**Primary location:** Student-selected university and campus.
+
+**Secondary location:** Browser geolocation, only when the student grants permission.
+
+**Fallback location:** Approximate IP-derived city or state.
+
+Use coordinates associated with real campuses and meetup locations to calculate approximate distances.
+
+Provide distance filters, such as:
+- On my campus.
+- Within 5 km.
+- Within 10 km.
+- Within 25 km.
+- Within 50 km.
+- Other universities.
+- Across Nigeria.
+
+Make the distance range adjustable.
+
+Ensure location is used responsibly. Do not expose a student's precise location to other users or place it publicly on their profile.
+
+Allow students to manually update their preferred discovery area.
+
+If the student declines location access, the system should still work using their selected university and campus.
+
+### Meetups ranking
+
+Rank suggested events based on relevance, proximity, upcoming date and actual engagement.
+
+Do not rank an event highly just because an administrator has featured it. Clearly distinguish between Featured and Recommended.
+
+Do not show expired events as upcoming meetups.
+
+# 10. INTRODUCE SKULLY: THE OFFICIAL SKULBUY MASCOT AND AI CHATBOT
+
+Introduce Skully as the official SkulBuy mascot and intelligent in-app assistant.
+
+Skully should become a recognisable part of the SkulBuy experience.
+
+Use the official Skully mascot image or uploaded design asset. Do not invent a replacement character or create a different mascot.
+
+### Skully's purpose
+
+Skully should serve as the user's personal marketplace assistant.
+
+It should help students:
+- Discover products.
+- Find affordable products.
+- Search for products within their university.
+- Discover products from other universities.
+- Find products available for rent.
+- Find products to buy.
+- Find sellers and vendors.
+- Compare available product listings.
+- Discover discounts.
+- Understand how SkulBuy works.
+- Understand how SkulCredits work.
+- Find university communities.
+- Discover meetups.
+- Navigate the application.
+- Get assistance with buying and selling.
+- Access frequently asked questions.
+- Contact support when necessary.
+
+### Skully interface
+
+Create a floating Skully assistant button on the application.
+
+It should be visible but not obstruct important controls.
+
+When clicked, open a modern chatbot interface containing:
+
+- Official Skully mascot avatar.
+- Welcome message.
+- Chat history.
+- Message input.
+- Send button.
+- Suggested questions.
+- Product recommendation cards.
+- Links to relevant app pages.
+- Close and minimise controls.
+
+Suggested welcome message:
+
+**Hey! I'm Skully, your SkulBuy assistant.**
+
+Looking for something to buy, sell or rent? Need help finding great deals around your campus? Tell me what you need and let's explore SkulBuy together.
+
+Suggested starting prompts:
+
+- Find products around my university.
+- Show me affordable gadgets.
+- What can I rent on SkulBuy?
+- Show me popular products.
+- Help me sell something.
+- Find nearby meetups.
+- How do SkulCredits work?
+
+### Connect Skully to the real marketplace
+
+This is especially important.
+
+Skully must be connected to the actual SkulBuy product database and existing marketplace backend.
+
+It must not simply respond using generic AI knowledge.
+
+When a student asks for a product, Skully should:
+
+1. Search the actual product listings.
+2. Check product availability and listing status.
+3. Consider the student's university and selected location.
+4. Find relevant products.
+5. Display genuine product images.
+6. Display actual product names.
+7. Display current listing prices.
+8. Show seller information where appropriate.
+9. Provide a clickable View Product link.
+10. Offer alternatives when a product is unavailable.
+
+For example, when a student asks:
+
+"Can I get a fairly used laptop around FUTMINNA?"
+
+Skully should search actual listings associated with FUTMINNA or sellers who serve that campus, then show relevant available laptops.
+
+It must not invent products, prices, sellers or discounts.
+
+If no matching products exist, Skully should clearly say that no matching listings are currently available and offer to search other universities.
+
+### Skully and product recommendations
+
+Make product cards inside the chatbot interactive.
+
+A student should be able to:
+- View a product.
+- Open the product details.
+- View the seller.
+- Start a private conversation with the seller.
+- Add to a wishlist or cart where supported.
+
+Skully must respect existing authentication, product availability, payment and transaction processes.
+
+It should never complete a purchase, rental or payment without the user's explicit action and the application's existing transaction safeguards.
+
+### Skully intelligence and support
+
+Connect the chatbot to:
+- Product catalogue.
+- Product categories.
+- Vendor listings.
+- University records.
+- Campus locations.
+- Meetup records.
+- Discounts and promotions.
+- SkulCredits rules.
+- Relevant platform FAQs.
+- Customer support information.
+
+Use secure, permission-controlled backend integrations.
+
+Do not expose private user data, seller account details or information that the user is not authorised to access.
+
+Provide a fallback response when the AI service is unavailable.
+
+Include a clear route to human support when Skully cannot resolve an issue.
+
+# 11. IMPROVE THE NEW USER HOMEPAGE EXPERIENCE
+
+Once onboarding is completed, the first homepage experience should be personalised.
+
+The homepage should introduce students to what is available around them.
+
+Suggested structure:
+
+1. Welcome message using the student's first name.
+2. Search bar with product discovery.
+3. Existing four-slide marketplace carousel.
+4. Daily Streak and SkulCredits reward section.
+5. Products Around Your Campus.
+6. New Products.
+7. Featured Products and Deals.
+8. Products Available for Rent.
+9. Popular Products Across Universities.
+10. Nearby and Suggested Meetups.
+11. SkulBuy Community preview.
+12. Popular Categories.
+13. Skully chatbot access.
+
+The homepage must remain clean, organised and responsive.
+
+Do not overcrowd it with too many promotional cards.
+
+Prioritise product discovery, personalisation and ease of navigation.
+
+# 12. APPLICATION-WIDE BUTTON AND LINK AUDIT
+
+Perform a comprehensive audit of the entire SkulBuy application.
+
+I want every visible button, navigation item, card action, link and interactive element checked.
+
+There should be no decorative buttons that do nothing.
+
+Inspect:
+- Homepage.
+- Registration.
+- Login.
+- Onboarding.
+- University selection.
+- Account setup.
+- Account dashboard.
+- SkulCredits.
+- Daily Streaks.
+- Marketplace.
+- Product categories.
+- Product detail pages.
+- Add Product.
+- Edit Product.
+- Vendor dashboard.
+- Product search and filters.
+- Cart and checkout.
+- Orders.
+- Escrow functionality.
+- Private chats.
+- Communities.
+- Meetups.
+- Notifications.
+- Wishlist.
+- User profiles.
+- Settings.
+- Help and support.
+- Footer navigation.
+- Mobile navigation.
+
+For each interactive element:
+
+1. Confirm that the button performs its intended action.
+2. Confirm that links navigate to the correct pages.
+3. Confirm that forms submit correctly.
+4. Confirm that validation works.
+5. Confirm that error messages are understandable.
+6. Confirm that loading states appear appropriately.
+7. Confirm that successful actions provide feedback.
+8. Confirm that users are not taken to broken or incorrect routes.
+
+Check for:
+- Missing routes.
+- Broken links.
+- Empty pages.
+- Non-functional dropdowns.
+- Search buttons that do not search.
+- Filters that do not filter.
+- Upload buttons that do not upload.
+- Save buttons that do not save.
+- Buttons with missing click handlers.
+- Links pointing to outdated pages.
+- Inaccessible mobile controls.
+
+Fix the issues rather than merely reporting them.
+
+Do not remove working features when repairing broken ones.
+
+# 13. PERFORMANCE, SECURITY AND DATA INTEGRITY
+
+Preserve and improve the existing application architecture.
+
+Before implementation, inspect the existing stack, database, authentication, file storage and API integrations.
+
+Use the current architecture wherever possible.
+
+Ensure:
+- User records remain intact.
+- Existing product listings are preserved.
+- Existing transactions are preserved.
+- Wallet and SkulCredits balances are preserved.
+- Existing chats remain accessible.
+- Existing vendor accounts remain functional.
+- Image uploads use secure persistent storage.
+- Database relationships remain consistent.
+- University data is centrally managed.
+- Location information is handled responsibly.
+- Authentication and authorisation remain secure.
+- Signup bonuses cannot be claimed repeatedly.
+- AI integrations cannot bypass payment or transaction safeguards.
+
+Make sure the application remains responsive and performs well on mobile networks.
+
+# 14. FINAL TESTING AND ACCEPTANCE CRITERIA
+
+Do not consider this implementation complete until the following tests have passed.
+
+**Onboarding**
+- A brand-new user sees the welcome experience.
+- Existing users can sign in.
+- University selection follows authentication.
+- All recognised Nigerian universities are searchable.
+- IP-based suggestions work where supported.
+- Manual university selection always works.
+- Account setup saves successfully.
+- Returning users do not repeat completed onboarding.
+
+**Signup bonus**
+- Eligible new accounts receive ₦500 in SkulCredits.
+- The balance updates correctly.
+- The transaction appears in history.
+- Duplicate signup rewards are prevented.
+- Existing daily rewards continue working.
+
+**Image uploads**
+- New products accept image uploads.
+- Existing product images can be replaced.
+- Image previews work.
+- Uploaded images persist after refreshing.
+- The updated image appears across the application.
+
+**University and campus locations**
+- Nigerian universities are available.
+- Multi-campus institutions are supported.
+- Students can select their preferred campus.
+- University and campus filters work.
+- Location suggestions do not falsely assign universities.
+
+**Meetups**
+- Popular events from different universities can be discovered.
+- Suggested meetups use the correct student university.
+- Proximity filters work.
+- Expired meetups are excluded from upcoming recommendations.
+- Event cards navigate correctly.
+
+**Skully**
+- The official mascot is displayed.
+- The chatbot opens and closes correctly.
+- Product searches use actual listings.
+- Prices and availability are accurate.
+- Product cards link to the right listings.
+- Skully can explain the platform's features.
+- Unavailable AI services have a fallback.
+- Private information remains protected.
+
+**Application-wide audit**
+- All important buttons work.
+- All navigation links lead to valid pages.
+- Forms submit correctly.
+- No major broken images remain.
+- Mobile and desktop layouts work.
+- Existing marketplace and payment functionality remains intact.
+
+# 15. IMPLEMENTATION REPORT
+
+At the end of the work, provide:
+
+1. List of all completed features.
+2. Pages and components modified.
+3. New database tables or fields introduced.
+4. University database source and coverage.
+5. IP geolocation integration and limitations.
+6. Signup bonus implementation details.
+7. Product image upload fixes.
+8. Meetup and proximity improvements.
+9. Skully AI integrations.
+10. Broken buttons and links identified and repaired.
+11. Testing performed and results.
+12. Remaining configuration or external service requirements.
+
+**FINAL DIRECTIVE**
+
+Implement the changes directly into the existing SkulBuy codebase.
+
+Do not simply create mockups or static screens.
+
+Do not leave empty image placeholders, inactive buttons, hardcoded university selections or fake product recommendations.
+
+Use actual database records and working backend functionality.
+
+Preserve the existing SkulBuy branding, marketplace, vendors, users, orders, payment integrations, escrow, SkulCredits, chats and communities.
+
+The final experience should make SkulBuy feel like a complete Nigerian university marketplace.
+
+**BUY. SELL. RENT. DISCOVER. CONNECT.**
+
+One marketplace. Every campus. Across Nigeria.
