@@ -5,12 +5,12 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   loading: boolean;
-  login: (email: string) => Promise<{ success: boolean; error?: string }>;
+  login: (email: string, password?: string) => Promise<{ success: boolean; error?: string }>;
   register: (data: { full_name?: string; first_name?: string; last_name?: string; email: string; password?: string; phone?: string; role?: string; matric_no?: string; department?: string; campus?: string; campus_area?: string; university?: string }) => Promise<{ success: boolean; error?: string; token?: string; user?: User }>;
   sendOtp: (email: string) => Promise<{ success: boolean; error?: string; cooldownSeconds?: number }>;
   verifyOtp: (email: string, code: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
-  switchUser: (userId: number) => Promise<void>;
+  switchUser: (userId: number | string) => Promise<void>;
   refreshUser: () => Promise<void>;
   authFetch: (url: string, options?: RequestInit) => Promise<Response>;
   completeOnboarding: (data: any) => Promise<{ success: boolean; bonusAwarded?: number; user?: User; error?: string }>;
@@ -20,7 +20,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem('skulbuy_token') || '2'); // Default to Amina (Verified Seller)
+  const [token, setToken] = useState<string | null>(() => localStorage.getItem('skulbuy_token') || null);
   const [loading, setLoading] = useState(true);
 
   const authFetch = async (url: string, options: RequestInit = {}) => {
@@ -34,17 +34,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const refreshUser = async () => {
-    if (!token) {
+    const activeToken = token || localStorage.getItem('skulbuy_token');
+    if (!activeToken) {
       setUser(null);
       setLoading(false);
       return;
     }
     try {
-      const res = await authFetch('/api/auth/me');
-      const data = await res.json();
-      if (data.authenticated && data.user) {
-        setUser(data.user);
+      let res = await authFetch('/api/users/me');
+      if (!res.ok) {
+        res = await authFetch('/api/auth/me');
+      }
+      if (res.ok) {
+        const data = await res.json();
+        const userData: User = {
+          id: data.id || data.user_id,
+          email: data.email,
+          full_name: data.full_name,
+          role: data.role || 'buyer',
+          campus: data.campus || data.school_name || 'FUT Minna',
+          points: data.points ?? 50,
+          wallet_balance: data.wallet_balance ?? 0,
+          matric_no: data.matric_no,
+          phone: data.phone,
+          is_verified: data.is_verified ?? false,
+          created_at: data.created_at || new Date().toISOString()
+        };
+        setUser(userData);
       } else {
+        localStorage.removeItem('skulbuy_token');
+        setToken(null);
         setUser(null);
       }
     } catch {
@@ -58,20 +77,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     refreshUser();
   }, [token]);
 
-  const login = async (email: string) => {
+  const login = async (email: string, password?: string) => {
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({
+          email: email.trim(),
+          username: email.trim(),
+          password: password || 'Password123!'
+        })
       });
       const data = await res.json();
       if (!res.ok) {
-        return { success: false, error: data.error || 'Login failed' };
+        return { success: false, error: data.detail || data.error || 'Login failed' };
       }
-      localStorage.setItem('skulbuy_token', data.token);
-      setToken(data.token);
-      setUser(data.user);
+      const tokenVal = data.access_token || data.token;
+      localStorage.setItem('skulbuy_token', tokenVal);
+      setToken(tokenVal);
+
+      const u = data.user || data;
+      const userData: User = {
+        id: u.id || data.user_id,
+        email: u.email || email,
+        full_name: u.full_name || 'Verified Student',
+        role: u.role || data.role || 'buyer',
+        campus: u.campus || u.school_name || 'FUT Minna',
+        points: u.points ?? 50,
+        wallet_balance: u.wallet_balance ?? 0,
+        matric_no: u.matric_no,
+        phone: u.phone,
+        is_verified: u.is_verified ?? false,
+        created_at: u.created_at || new Date().toISOString()
+      };
+      setUser(userData);
       return { success: true };
     } catch {
       return { success: false, error: 'Network error occurred during login' };
@@ -80,19 +119,48 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const register = async (formData: { full_name?: string; first_name?: string; last_name?: string; email: string; password?: string; phone?: string; role?: string; matric_no?: string; department?: string; campus?: string; campus_area?: string; university?: string }) => {
     try {
+      const payload = {
+        email: formData.email.trim(),
+        full_name: formData.full_name || `${formData.first_name || ''} ${formData.last_name || ''}`.trim() || 'FUT Minna Student',
+        password: formData.password || 'Password123!',
+        phone: formData.phone || undefined,
+        matric_no: formData.matric_no || undefined,
+        school_name: formData.campus || formData.university || 'FUT Minna',
+        role: (formData.role?.toLowerCase() === 'seller' || formData.role?.toLowerCase() === 'vendor') ? 'vendor' : 'buyer'
+      };
+
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(payload)
       });
       const data = await res.json();
       if (!res.ok) {
-        return { success: false, error: data.error || 'Registration failed' };
+        return { success: false, error: data.detail || data.error || 'Registration failed' };
       }
-      localStorage.setItem('skulbuy_token', data.token);
-      setToken(data.token);
-      setUser(data.user);
-      return { success: true, token: data.token, user: data.user };
+
+      const tokenVal = data.access_token || data.token;
+      if (tokenVal) {
+        localStorage.setItem('skulbuy_token', tokenVal);
+        setToken(tokenVal);
+      }
+
+      const u = data.user || data;
+      const userData: User = {
+        id: u.id || data.user_id,
+        email: u.email || payload.email,
+        full_name: u.full_name || payload.full_name,
+        role: u.role || payload.role,
+        campus: u.campus || u.school_name || payload.school_name,
+        points: u.points ?? 50,
+        wallet_balance: u.wallet_balance ?? 0,
+        matric_no: u.matric_no || payload.matric_no,
+        phone: u.phone || payload.phone,
+        is_verified: u.is_verified ?? false,
+        created_at: u.created_at || new Date().toISOString()
+      };
+      setUser(userData);
+      return { success: true, token: tokenVal, user: userData };
     } catch {
       return { success: false, error: 'Network error occurred during registration' };
     }
@@ -164,7 +232,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
   };
 
-  const switchUser = async (userId: number) => {
+  const switchUser = async (userId: number | string) => {
     localStorage.setItem('skulbuy_token', String(userId));
     setToken(String(userId));
   };

@@ -4,7 +4,8 @@ import {
   Sparkles, ShieldCheck, MapPin, 
   ArrowRight, CheckCircle2, Award, Wallet, ArrowLeft, 
   Eye, EyeOff, Lock, Phone, Mail, GraduationCap, 
-  Search, Compass, Check, AlertCircle, Camera, RefreshCw
+  Search, Compass, Check, AlertCircle, Camera, RefreshCw,
+  Upload, Trash2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../context/AuthContext';

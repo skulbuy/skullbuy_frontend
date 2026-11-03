@@ -2,7 +2,7 @@ export type UserRole = 'buyer' | 'seller' | 'ambassador' | 'vendor' | 'admin';
 export type VerificationStatus = 'not_verified' | 'pending' | 'verified' | 'rejected';
 
 export interface User {
-  id: number;
+  id: number | string;
   email: string;
   full_name: string;
   first_name?: string;
@@ -18,16 +18,17 @@ export interface User {
   matric_no?: string;
   department?: string;
   level_of_study?: string;
-  student_id_verified: VerificationStatus;
+  student_id_verified?: VerificationStatus;
+  is_verified?: boolean;
   id_card_image?: string;
-  points: number;
-  wallet_balance: number;
+  points?: number;
+  wallet_balance?: number;
   daily_streak?: number;
   longest_streak?: number;
   last_reward_date?: string;
   signup_bonus_claimed?: number;
   has_onboarded?: number;
-  created_at: string;
+  created_at?: string;
 }
 
 export interface CampusLocation {
@@ -90,11 +91,11 @@ export interface Meetup {
 }
 
 export interface Order {
-  id: number;
+  id: number | string;
   order_number?: string;
-  buyer_id: number;
-  seller_id: number;
-  listing_id: number;
+  buyer_id: number | string;
+  seller_id: number | string;
+  listing_id: number | string;
   quantity: number;
   total_amount: number;
   fulfilment_type: 'pickup' | 'delivery' | string;
@@ -103,7 +104,7 @@ export interface Order {
   pickup_code?: string;
   payment_method?: string;
   status: 'pending' | 'escrow_locked' | 'completed' | 'cancelled' | string;
-  created_at: string;
+  created_at?: string;
 }
 
 export interface DailyStreakStatus {
@@ -186,15 +187,16 @@ export interface WalletTransaction {
 }
 
 export interface Category {
-  id: number;
+  id: number | string;
   name: string;
-  slug: string;
+  slug?: string;
+  description?: string;
   icon?: string;
 }
 
 export interface Listing {
-  id: number;
-  seller_id: number;
+  id: number | string;
+  seller_id: number | string;
   seller_name: string;
   seller_email?: string;
   seller_phone?: string;
@@ -203,18 +205,18 @@ export interface Listing {
   seller_department?: string;
   seller_area?: string;
   seller_joined?: string;
-  category_id: number;
-  category_name: string;
+  category_id: number | string;
+  category_name?: string;
   category_slug?: string;
   title: string;
   description: string;
   price: number;
-  condition: 'New' | 'Fairly Used';
-  is_negotiable: boolean;
-  is_boosted: boolean;
-  status: 'active' | 'sold' | 'withdrawn' | 'suspended';
-  campus: string;
-  campus_location: string;
+  condition?: 'New' | 'Fairly Used' | string;
+  is_negotiable?: boolean;
+  is_boosted?: boolean;
+  status: 'active' | 'sold' | 'withdrawn' | 'suspended' | string;
+  campus?: string;
+  campus_location?: string;
   university?: string;
   campus_name?: string;
   image_url: string;

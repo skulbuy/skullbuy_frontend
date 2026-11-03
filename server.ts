@@ -959,10 +959,10 @@ async function startServer() {
     }
   });
 
-  // Reverse proxy /api/v1 directly to live SnapDeploy FastAPI backend
-  app.use("/api/v1", async (req, res) => {
+  // Reverse proxy helper to live SnapDeploy FastAPI backend with automatic cold-start wake & graceful fallback
+  const proxyToLiveBackend = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
-      const targetUrl = `${LIVE_BACKEND_URL}/api/v1${req.url}`;
+      const targetUrl = `${LIVE_BACKEND_URL}${req.baseUrl}${req.url}`;
       const headers = new Headers();
       for (const [k, v] of Object.entries(req.headers)) {
         if (!["host", "connection", "content-length"].includes(k.toLowerCase()) && v) {
@@ -978,6 +978,13 @@ async function startServer() {
         headers.set("Content-Type", "application/json");
       }
       const backendRes = await fetch(targetUrl, fetchOpts);
+
+      // If backend returns 503 wake page, trigger wake signal and fall back gracefully
+      if (backendRes.status === 503) {
+        fetch("https://snapdeploy.dev/api/public/wake/skulbuy-backend-f36c6", { method: "POST" }).catch(() => {});
+        return next();
+      }
+
       res.status(backendRes.status);
       backendRes.headers.forEach((val, key) => {
         if (!["content-encoding", "transfer-encoding"].includes(key.toLowerCase())) {
@@ -987,9 +994,20 @@ async function startServer() {
       const data = await backendRes.arrayBuffer();
       res.send(Buffer.from(data));
     } catch (err: any) {
-      res.status(502).json({ error: "Backend proxy error", details: err?.message });
+      // If live backend is offline or network error, fallback to local routes
+      next();
     }
-  });
+  };
+
+  // Mount live proxy for all primary live API endpoints
+  app.use("/api/v1", proxyToLiveBackend);
+  app.use("/api/auth", proxyToLiveBackend);
+  app.use("/api/users", proxyToLiveBackend);
+  app.use("/api/categories", proxyToLiveBackend);
+  app.use("/api/products", proxyToLiveBackend);
+  app.use("/api/listings", proxyToLiveBackend);
+  app.use("/api/orders", proxyToLiveBackend);
+  app.use("/api/seed", proxyToLiveBackend);
 
   // Ensure public/uploads directory exists
   const uploadsDir = path.join(__dirname, "public", "uploads");
@@ -1005,7 +1023,7 @@ async function startServer() {
   }
 
   // Initialize Transactional Email Service (Nodemailer)
-  let emailTransporter: nodemailer.Transporter | null = null;
+  let emailTransporter: any = null;
   if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
     try {
       emailTransporter = nodemailer.createTransport({

@@ -179,7 +179,7 @@ export const ProfilePage = () => {
     setAuthLoading(false);
   };
 
-  const handleStatusChange = async (listingId: number, newStatus: string) => {
+  const handleStatusChange = async (listingId: number | string, newStatus: string) => {
     try {
       const res = await authFetch(`/api/listings/${listingId}/status`, {
         method: 'PATCH',
