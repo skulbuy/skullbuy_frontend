@@ -107,8 +107,7 @@ export const MessagesPage = () => {
             }`}
           >
             <MessageCircle size={14} />
-            <span>Private Chats</span>
-            <span className="bg-amber-100 text-amber-800 text-[8px] font-black px-1.5 py-0.2 rounded-full uppercase">Soon</span>
+            <span>Private Chats ({chats.length})</span>
           </button>
 
           <button
@@ -136,16 +135,6 @@ export const MessagesPage = () => {
         ) : activeTab === 'private' ? (
           /* Tab 1: Private Chats */
           <div className="space-y-3">
-            <div className="bg-amber-50 border border-amber-200/80 rounded-2xl p-3 flex items-start gap-2.5">
-              <span className="bg-amber-500 text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-full mt-0.5 shrink-0">Coming Soon</span>
-              <div className="text-xs text-amber-950">
-                <p className="font-bold">In-App Chat & Offer Negotiations Coming Soon</p>
-                <p className="text-[11px] text-amber-800 mt-0.5">
-                  Direct real-time buyer-seller chat and custom price counter-offers are launching in an upcoming release. In the meantime, discover campus groups in the Communities tab!
-                </p>
-              </div>
-            </div>
-
             {filteredChats.length === 0 ? (
             <div className="bg-white rounded-3xl p-8 text-center border border-gray-100 shadow-2xs">
               <MessageCircle size={36} className="text-amber-500/40 mx-auto mb-2" />

@@ -9,7 +9,7 @@ import { useAuth } from '../context/AuthContext';
 import { Header } from '../components/Header';
 
 export const AdminPage = () => {
-  const { user, switchUser, authFetch } = useAuth();
+  const { user, authFetch } = useAuth();
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState<'metrics' | 'verifications' | 'reports' | 'cycles' | 'audit'>('metrics');
@@ -61,12 +61,12 @@ export const AdminPage = () => {
             Administrative operations are restricted to verified FUTMX campus personnel and moderators.
           </p>
           <div className="mt-5 space-y-2">
-            <button
-              onClick={() => switchUser(1)}
-              className="w-full bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2.5 px-4 rounded-xl shadow-sm transition"
+            <Link
+              to="/profile"
+              className="block w-full bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2.5 px-4 rounded-xl shadow-sm transition"
             >
-              Switch to Campus Admin (Staff)
-            </button>
+              Sign in as Campus Admin
+            </Link>
             <Link
               to="/"
               className="block bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold py-2 rounded-xl transition"

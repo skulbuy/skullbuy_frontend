@@ -15,7 +15,7 @@ import { SkulBuyLogo } from '../components/SkulBuyLogo';
 import { WalletTransaction, University } from '../types';
 
 export const ProfilePage = () => {
-  const { user, login, register, logout, switchUser, authFetch, refreshUser } = useAuth();
+  const { user, login, register, logout, authFetch, refreshUser } = useAuth();
   const navigate = useNavigate();
 
   // Auth form state if logged out
@@ -152,7 +152,7 @@ export const ProfilePage = () => {
     e.preventDefault();
     setAuthError('');
     setAuthLoading(true);
-    const res = await login(emailInput);
+    const res = await login(emailInput, passwordInput);
     if (!res.success) {
       setAuthError(res.error || 'Login failed');
     }
@@ -264,13 +264,25 @@ export const ProfilePage = () => {
             {authMode === 'login' ? (
               <form onSubmit={handleLoginSubmit} className="space-y-3 text-xs">
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">FUTMX Email or Username</label>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Student Email or Username</label>
                   <input
                     type="text"
                     required
-                    placeholder="amina.bello@futminna.edu.ng"
+                    placeholder="student@futminna.edu.ng"
                     value={emailInput}
                     onChange={(e) => setEmailInput(e.target.value)}
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 outline-none focus:border-amber-400 font-medium"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Password</label>
+                  <input
+                    type="password"
+                    required
+                    placeholder="••••••••"
+                    value={passwordInput}
+                    onChange={(e) => setPasswordInput(e.target.value)}
                     className="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 outline-none focus:border-amber-400 font-medium"
                   />
                 </div>
@@ -278,7 +290,7 @@ export const ProfilePage = () => {
                 <button
                   type="submit"
                   disabled={authLoading}
-                  className="w-full bg-amber-500 hover:bg-amber-600 text-white font-black py-3 rounded-xl shadow-sm transition"
+                  className="w-full bg-amber-500 hover:bg-amber-600 text-white font-black py-3 rounded-xl shadow-sm transition cursor-pointer"
                 >
                   {authLoading ? 'Signing In...' : 'Sign In'}
                 </button>
@@ -391,43 +403,10 @@ export const ProfilePage = () => {
               <button
                 type="button"
                 onClick={() => setAuthMode(authMode === 'login' ? 'register' : 'login')}
-                className="text-xs font-bold text-amber-600 hover:underline"
+                className="text-xs font-bold text-amber-600 hover:underline cursor-pointer"
               >
                 {authMode === 'login' ? "Don't have an account? Sign up" : 'Already registered? Sign in'}
               </button>
-            </div>
-
-            {/* Quick QA Persona Switcher for Evaluators */}
-            <div className="mt-5 pt-4 border-t border-dashed border-gray-200">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 text-center">
-                QA Evaluator Quick Login:
-              </p>
-              <div className="grid grid-cols-2 gap-1.5 text-[10px]">
-                <button
-                  onClick={() => switchUser(2)}
-                  className="p-2 bg-amber-50 hover:bg-amber-100 text-amber-900 rounded-lg font-bold border border-amber-200"
-                >
-                  Verified Seller (Amina)
-                </button>
-                <button
-                  onClick={() => switchUser(3)}
-                  className="p-2 bg-gray-50 hover:bg-gray-100 text-gray-800 rounded-lg font-bold border border-gray-200"
-                >
-                  Student Buyer (Uche)
-                </button>
-                <button
-                  onClick={() => switchUser(4)}
-                  className="p-2 bg-purple-50 hover:bg-purple-100 text-purple-900 rounded-lg font-bold border border-purple-200"
-                >
-                  Ambassador (Ibrahim)
-                </button>
-                <button
-                  onClick={() => switchUser(1)}
-                  className="p-2 bg-red-50 hover:bg-red-100 text-red-900 rounded-lg font-bold border border-red-200"
-                >
-                  Campus Admin (Staff)
-                </button>
-              </div>
             </div>
           </div>
         </div>
@@ -516,11 +495,10 @@ export const ProfilePage = () => {
                 <span className="text-gray-700">Account not verified with Student ID</span>
               </div>
               <button
-                onClick={() => alert('Student ID Card Photo Verification is coming soon! You are currently authenticated via your student email & matric credentials.')}
-                className="bg-amber-500/90 hover:bg-amber-500 text-white text-[11px] font-bold px-3 py-1 rounded-lg transition flex items-center gap-1"
+                onClick={() => setShowVerifyModal(true)}
+                className="bg-amber-500/90 hover:bg-amber-500 text-white text-[11px] font-bold px-3 py-1 rounded-lg transition flex items-center gap-1 cursor-pointer"
               >
-                <span>Verify ID</span>
-                <span className="bg-white/20 text-[8px] uppercase px-1 rounded">Soon</span>
+                <span>Verify Student ID</span>
               </button>
             </div>
           )}
@@ -1008,37 +986,6 @@ export const ProfilePage = () => {
 
                 <p>Department: <strong className="text-gray-900">{user.department || 'Not set'}</strong></p>
                 <p>Matric No: <strong className="text-gray-900">{user.matric_no || 'Not set'}</strong></p>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-2xs space-y-2.5">
-              <h4 className="font-extrabold text-gray-900">Testing & Persona Switch</h4>
-              <p className="text-[11px] text-gray-500">Fast switch between roles to audit application flows.</p>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  onClick={() => switchUser(2)}
-                  className="p-2.5 rounded-xl border border-gray-200 text-left font-bold hover:bg-amber-50 transition"
-                >
-                  Amina Bello (Seller)
-                </button>
-                <button
-                  onClick={() => switchUser(3)}
-                  className="p-2.5 rounded-xl border border-gray-200 text-left font-bold hover:bg-amber-50 transition"
-                >
-                  Uche Nnamdi (Buyer)
-                </button>
-                <button
-                  onClick={() => switchUser(4)}
-                  className="p-2.5 rounded-xl border border-gray-200 text-left font-bold hover:bg-amber-50 transition"
-                >
-                  Ibrahim (Ambassador)
-                </button>
-                <button
-                  onClick={() => switchUser(1)}
-                  className="p-2.5 rounded-xl border border-red-200 text-left font-bold text-red-700 hover:bg-red-50 transition"
-                >
-                  Staff Admin Portal
-                </button>
               </div>
             </div>
 

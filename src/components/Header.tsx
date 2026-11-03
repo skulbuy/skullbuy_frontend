@@ -9,11 +9,10 @@ import { SkulBuyLogo } from './SkulBuyLogo';
 import { UniversityModal } from './UniversityModal';
 
 export const Header: React.FC<{ onSearchSubmit?: (query: string) => void }> = ({ onSearchSubmit }) => {
-  const { user, switchUser, logout } = useAuth();
+  const { user, logout } = useAuth();
   const [showPersonaMenu, setShowPersonaMenu] = useState(false);
   const [showUniModal, setShowUniModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [unreadCount, setUnreadCount] = useState(2);
   const navigate = useNavigate();
 
   const currentUniversity = user?.university || user?.campus || 'FUTMINNA';
@@ -84,7 +83,6 @@ export const Header: React.FC<{ onSearchSubmit?: (query: string) => void }> = ({
             </Link>
             <Link to="/meetups" className="hover:text-amber-600 transition flex items-center gap-1">
               <span>Meetups</span>
-              <span className="text-[9px] bg-purple-100 text-purple-700 px-1 rounded font-bold">SOON</span>
             </Link>
           </nav>
 
@@ -176,92 +174,79 @@ export const Header: React.FC<{ onSearchSubmit?: (query: string) => void }> = ({
                 <ChevronDown size={12} className="text-gray-400" />
               </button>
 
-              {/* Persona selector dropdown */}
+              {/* Account menu dropdown */}
               {showPersonaMenu && (
-                <div className="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 p-2 z-50 text-left text-xs animate-in fade-in slide-in-from-top-2">
-                  <div className="px-3 py-2 border-b border-gray-100 mb-1">
-                    <p className="font-bold text-gray-900">Switch Test Account</p>
-                    <p className="text-[10px] text-gray-500">Fast persona testing for directive review</p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <button
-                      onClick={() => { switchUser(2); setShowPersonaMenu(false); }}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-amber-50 transition flex items-center justify-between"
-                    >
-                      <div>
-                        <p className="font-bold text-gray-800">Amina Bello</p>
-                        <p className="text-[10px] text-gray-500">Gidan Kwano • Wallet: ₦45,000</p>
+                <div className="absolute right-0 mt-2 w-60 bg-white rounded-2xl shadow-xl border border-gray-100 p-2 z-50 text-left text-xs animate-in fade-in slide-in-from-top-2">
+                  {user ? (
+                    <>
+                      <div className="px-3 py-2 border-b border-gray-100 mb-1">
+                        <p className="font-bold text-gray-900 truncate">{user.full_name}</p>
+                        <p className="text-[10px] text-gray-500 truncate">{user.email}</p>
                       </div>
-                      <span className="text-[10px] bg-emerald-100 text-emerald-700 font-bold px-1.5 py-0.5 rounded">Verified</span>
-                    </button>
-
-                    <button
-                      onClick={() => { switchUser(3); setShowPersonaMenu(false); }}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-amber-50 transition flex items-center justify-between"
-                    >
-                      <div>
-                        <p className="font-bold text-gray-800">Uche Nnamdi</p>
-                        <p className="text-[10px] text-gray-500">Bosso Gate • Wallet: ₦25,000</p>
+                      <div className="space-y-1">
+                        <Link
+                          to="/profile"
+                          onClick={() => setShowPersonaMenu(false)}
+                          className="w-full text-left px-3 py-2 rounded-xl hover:bg-amber-50 transition flex items-center justify-between font-bold text-gray-800"
+                        >
+                          <span>Profile & Campus Wallet</span>
+                          <span className="text-[10px] text-emerald-700 font-black">₦{(user.wallet_balance || 0).toLocaleString()}</span>
+                        </Link>
+                        <Link
+                          to="/messages"
+                          onClick={() => setShowPersonaMenu(false)}
+                          className="w-full text-left px-3 py-2 rounded-xl hover:bg-gray-50 transition flex items-center justify-between font-semibold text-gray-700"
+                        >
+                          <span>Chats & Messages</span>
+                        </Link>
+                        <Link
+                          to="/communities"
+                          onClick={() => setShowPersonaMenu(false)}
+                          className="w-full text-left px-3 py-2 rounded-xl hover:bg-gray-50 transition flex items-center justify-between font-semibold text-gray-700"
+                        >
+                          <span>Campus Communities</span>
+                        </Link>
+                        <Link
+                          to="/skulbox"
+                          onClick={() => setShowPersonaMenu(false)}
+                          className="w-full text-left px-3 py-2 rounded-xl hover:bg-gray-50 transition flex items-center justify-between font-semibold text-gray-700"
+                        >
+                          <span>SkulBox Group Savings</span>
+                        </Link>
                       </div>
-                      <span className="text-[10px] bg-gray-100 text-gray-600 font-bold px-1.5 py-0.5 rounded">Buyer</span>
-                    </button>
-
-                    <button
-                      onClick={() => { switchUser(4); setShowPersonaMenu(false); }}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-amber-50 transition flex items-center justify-between"
-                    >
-                      <div>
-                        <p className="font-bold text-gray-800">Ibrahim Khalil</p>
-                        <p className="text-[10px] text-gray-500">Hall 3 • Wallet: ₦15,000</p>
+                      <div className="pt-2 mt-1 border-t border-gray-100 px-2 flex justify-between items-center">
+                        <Link
+                          to="/profile"
+                          onClick={() => setShowPersonaMenu(false)}
+                          className="text-[11px] font-bold text-amber-600 hover:underline"
+                        >
+                          Account Settings
+                        </Link>
+                        <button
+                          onClick={() => { logout(); setShowPersonaMenu(false); }}
+                          className="text-[11px] font-semibold text-red-500 hover:text-red-600 cursor-pointer"
+                        >
+                          Sign Out
+                        </button>
                       </div>
-                      <span className="text-[10px] bg-purple-100 text-purple-700 font-bold px-1.5 py-0.5 rounded">Ambassador</span>
-                    </button>
-
-                    <button
-                      onClick={() => { switchUser(1); setShowPersonaMenu(false); }}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-red-50 transition flex items-center justify-between"
-                    >
-                      <div>
-                        <p className="font-bold text-gray-800">Campus Admin (Staff)</p>
-                        <p className="text-[10px] text-gray-500">Moderator & Verification Portal</p>
-                      </div>
-                      <span className="text-[10px] bg-red-100 text-red-700 font-bold px-1.5 py-0.5 rounded">Staff Admin</span>
-                    </button>
-
-                    <button
-                      onClick={() => { logout(); setShowPersonaMenu(false); }}
-                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-gray-100 text-gray-600 transition flex items-center justify-between"
-                    >
-                      <span>Browse as Anonymous Visitor</span>
-                      <span className="text-[10px] text-gray-400">Guest</span>
-                    </button>
-
-                    <Link
-                      to="/onboarding"
-                      onClick={() => setShowPersonaMenu(false)}
-                      className="w-full text-left px-3 py-2 rounded-xl bg-amber-50 text-amber-900 hover:bg-amber-100 transition flex items-center justify-between font-bold"
-                    >
-                      <span>+ New Student Onboarding</span>
-                      <span className="text-[9px] bg-amber-200 px-1.5 py-0.5 rounded font-black">+₦1k</span>
-                    </Link>
-                  </div>
-
-                  {user && (
-                    <div className="pt-2 mt-1 border-t border-gray-100 px-2 flex justify-between items-center">
+                    </>
+                  ) : (
+                    <div className="space-y-1">
                       <Link
                         to="/profile"
                         onClick={() => setShowPersonaMenu(false)}
-                        className="text-[11px] font-bold text-amber-600 hover:underline"
+                        className="w-full text-left px-3 py-2 rounded-xl hover:bg-gray-50 transition flex items-center justify-between font-bold text-gray-800"
                       >
-                        View Full Profile →
+                        <span>Sign In to Account</span>
                       </Link>
-                      <button
-                        onClick={() => { logout(); setShowPersonaMenu(false); }}
-                        className="text-[11px] font-semibold text-gray-400 hover:text-red-500"
+                      <Link
+                        to="/onboarding"
+                        onClick={() => setShowPersonaMenu(false)}
+                        className="w-full text-left px-3 py-2 rounded-xl bg-amber-50 text-amber-900 hover:bg-amber-100 transition flex items-center justify-between font-bold"
                       >
-                        Sign Out
-                      </button>
+                        <span>Create Student Account</span>
+                        <span className="text-[9px] bg-amber-200 px-1.5 py-0.5 rounded font-black">+₦1k</span>
+                      </Link>
                     </div>
                   )}
                 </div>

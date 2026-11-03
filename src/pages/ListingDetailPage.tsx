@@ -59,29 +59,20 @@ export const ListingDetailPage = () => {
       return;
     }
 
-    // In-app chat is marked as coming soon
-    const proceedToCheckout = window.confirm(
-      'In-App Direct Chat & Price Offers are coming soon in an upcoming release!\n\nWould you like to proceed directly with Protected Checkout for this listing?'
-    );
-    if (proceedToCheckout) {
-      navigate(`/checkout/${listing.id}`);
-      return;
-    }
-
     try {
       const res = await authFetch('/api/chats/start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           listing_id: listing.id,
-          initial_message: `Hi ${listing.seller_name.split(' ')[0]}, I'm interested in your "${listing.title}" on SkulBuy!`
+          initial_message: `Hi ${(listing.seller_name || 'there').split(' ')[0]}, I'm interested in your "${listing.title}" on SkulBuy!`
         })
       });
       const chat = await res.json();
       if (res.ok && chat.id) {
         navigate(`/messages/${chat.id}`);
       } else {
-        alert(chat.error || 'Could not start chat');
+        alert(chat.detail || chat.error || 'Could not start chat');
       }
     } catch {
       alert('Network error starting conversation');

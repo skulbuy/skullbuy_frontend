@@ -169,17 +169,6 @@ export const SkulBoxPage = () => {
       </section>
 
       <div className="px-4 -mt-4 relative z-20 space-y-4">
-        {/* Coming Soon Notice */}
-        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-2xl p-4 shadow-sm flex items-center justify-between">
-          <div>
-            <span className="bg-white/20 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-full tracking-wider">Coming Soon</span>
-            <h3 className="font-extrabold text-sm mt-1.5">SkulBox Savings is Launching Soon</h3>
-            <p className="text-xs text-amber-100 mt-0.5 leading-relaxed">
-              Cooperative bulk foodstuff procurement is currently being finalized. Pre-orders and group cycles will open soon!
-            </p>
-          </div>
-        </div>
-
         {/* Managed Cycle Information Box (BOX-01, BOX-03) */}
         <div className="bg-white rounded-2xl p-4 border border-amber-100 shadow-2xs">
           <div className="flex items-center justify-between pb-3 border-b border-gray-100">
@@ -352,11 +341,11 @@ export const SkulBoxPage = () => {
         {/* Subscribe CTA Button */}
         <div className="pt-2">
           <button
-            onClick={() => alert('SkulBox Group Savings is coming soon to your campus! Pre-orders will open in an upcoming release.')}
-            className="w-full bg-amber-500/90 hover:bg-amber-500 text-white py-3.5 px-4 rounded-xl font-black text-xs shadow-md shadow-amber-500/20 active:scale-95 transition flex items-center justify-center gap-1.5"
+            onClick={() => setShowCheckoutModal(true)}
+            className="w-full bg-amber-500 hover:bg-amber-600 text-white py-3.5 px-4 rounded-xl font-black text-xs shadow-md shadow-amber-500/20 active:scale-95 transition flex items-center justify-center gap-1.5 cursor-pointer"
           >
-            <span>Coming Soon: {currentPkg.name}</span>
-            <span className="bg-white/20 text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-full ml-1">Coming Soon</span>
+            <span>Subscribe to {currentPkg.name} (₦{currentPkg.price.toLocaleString()})</span>
+            <ArrowRight size={15} />
           </button>
         </div>
 

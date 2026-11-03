@@ -6,17 +6,55 @@ interface AuthContextType {
   token: string | null;
   loading: boolean;
   login: (email: string, password?: string) => Promise<{ success: boolean; error?: string }>;
-  register: (data: { full_name?: string; first_name?: string; last_name?: string; email: string; password?: string; phone?: string; role?: string; matric_no?: string; department?: string; campus?: string; campus_area?: string; university?: string }) => Promise<{ success: boolean; error?: string; token?: string; user?: User }>;
+  register: (data: {
+    full_name?: string;
+    first_name?: string;
+    last_name?: string;
+    email: string;
+    password?: string;
+    phone?: string;
+    role?: string;
+    matric_no?: string;
+    department?: string;
+    campus?: string;
+    campus_area?: string;
+    university?: string;
+  }) => Promise<{ success: boolean; error?: string; token?: string; user?: User }>;
   sendOtp: (email: string) => Promise<{ success: boolean; error?: string; cooldownSeconds?: number }>;
   verifyOtp: (email: string, code: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
-  switchUser: (userId: number | string) => Promise<void>;
   refreshUser: () => Promise<void>;
   authFetch: (url: string, options?: RequestInit) => Promise<Response>;
   completeOnboarding: (data: any) => Promise<{ success: boolean; bonusAwarded?: number; user?: User; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+function normalizeUser(data: any, fallbackEmail = ''): User {
+  const isVerified = Boolean(data.is_verified || data.student_id_verified === 1 || data.student_id_verified === 'verified');
+  return {
+    id: data.id || data.user_id,
+    email: data.email || fallbackEmail,
+    full_name: data.full_name || data.name || 'Campus Student',
+    username: data.username || undefined,
+    role: data.role || 'buyer',
+    campus: data.campus || data.school_name || 'FUT Minna',
+    campus_name: data.campus || data.school_name || 'FUT Minna',
+    campus_area: data.campus_area || undefined,
+    university: data.university || data.school_name || 'FUT Minna',
+    department: data.department || undefined,
+    level_of_study: data.level_of_study || undefined,
+    points: data.points ?? 100,
+    wallet_balance: data.wallet_balance ?? 0,
+    matric_no: data.matric_no || data.matric_number,
+    phone: data.phone,
+    is_verified: isVerified,
+    student_id_verified: isVerified ? 'verified' : 'not_verified',
+    profile_picture: data.avatar_url || data.profile_picture || undefined,
+    has_onboarded: data.has_onboarded ?? true,
+    created_at: data.created_at || new Date().toISOString(),
+  };
+}
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -28,7 +66,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const activeToken = token || localStorage.getItem('skulbuy_token');
     if (activeToken) {
       headers.set('Authorization', `Bearer ${activeToken}`);
-      headers.set('x-user-id', activeToken);
     }
     return fetch(url, { ...options, headers });
   };
@@ -47,20 +84,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       if (res.ok) {
         const data = await res.json();
-        const userData: User = {
-          id: data.id || data.user_id,
-          email: data.email,
-          full_name: data.full_name,
-          role: data.role || 'buyer',
-          campus: data.campus || data.school_name || 'FUT Minna',
-          points: data.points ?? 50,
-          wallet_balance: data.wallet_balance ?? 0,
-          matric_no: data.matric_no,
-          phone: data.phone,
-          is_verified: data.is_verified ?? false,
-          created_at: data.created_at || new Date().toISOString()
-        };
-        setUser(userData);
+        setUser(normalizeUser(data));
       } else {
         localStorage.removeItem('skulbuy_token');
         setToken(null);
@@ -85,54 +109,62 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         body: JSON.stringify({
           email: email.trim(),
           username: email.trim(),
-          password: password || 'Password123!'
-        })
+          password: password || '',
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
-        return { success: false, error: data.detail || data.error || 'Login failed' };
+        return { success: false, error: data.detail || data.error || 'Invalid email or password' };
       }
       const tokenVal = data.access_token || data.token;
       localStorage.setItem('skulbuy_token', tokenVal);
       setToken(tokenVal);
 
       const u = data.user || data;
-      const userData: User = {
-        id: u.id || data.user_id,
-        email: u.email || email,
-        full_name: u.full_name || 'Verified Student',
-        role: u.role || data.role || 'buyer',
-        campus: u.campus || u.school_name || 'FUT Minna',
-        points: u.points ?? 50,
-        wallet_balance: u.wallet_balance ?? 0,
-        matric_no: u.matric_no,
-        phone: u.phone,
-        is_verified: u.is_verified ?? false,
-        created_at: u.created_at || new Date().toISOString()
-      };
-      setUser(userData);
+      setUser(normalizeUser(u, email));
       return { success: true };
     } catch {
       return { success: false, error: 'Network error occurred during login' };
     }
   };
 
-  const register = async (formData: { full_name?: string; first_name?: string; last_name?: string; email: string; password?: string; phone?: string; role?: string; matric_no?: string; department?: string; campus?: string; campus_area?: string; university?: string }) => {
+  const register = async (formData: {
+    full_name?: string;
+    first_name?: string;
+    last_name?: string;
+    email: string;
+    password?: string;
+    phone?: string;
+    role?: string;
+    matric_no?: string;
+    department?: string;
+    campus?: string;
+    campus_area?: string;
+    university?: string;
+  }) => {
     try {
       const payload = {
         email: formData.email.trim(),
-        full_name: formData.full_name || `${formData.first_name || ''} ${formData.last_name || ''}`.trim() || 'FUT Minna Student',
-        password: formData.password || 'Password123!',
+        full_name:
+          formData.full_name ||
+          `${formData.first_name || ''} ${formData.last_name || ''}`.trim() ||
+          'FUT Minna Student',
+        password: formData.password || '',
         phone: formData.phone || undefined,
         matric_no: formData.matric_no || undefined,
-        school_name: formData.campus || formData.university || 'FUT Minna',
-        role: (formData.role?.toLowerCase() === 'seller' || formData.role?.toLowerCase() === 'vendor') ? 'vendor' : 'buyer'
+        department: formData.department || undefined,
+        campus_area: formData.campus_area || undefined,
+        school_name: formData.university || formData.campus || 'FUT Minna',
+        role:
+          formData.role?.toLowerCase() === 'seller' || formData.role?.toLowerCase() === 'vendor'
+            ? 'vendor'
+            : 'buyer',
       };
 
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -146,19 +178,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       const u = data.user || data;
-      const userData: User = {
-        id: u.id || data.user_id,
-        email: u.email || payload.email,
-        full_name: u.full_name || payload.full_name,
-        role: u.role || payload.role,
-        campus: u.campus || u.school_name || payload.school_name,
-        points: u.points ?? 50,
-        wallet_balance: u.wallet_balance ?? 0,
-        matric_no: u.matric_no || payload.matric_no,
-        phone: u.phone || payload.phone,
-        is_verified: u.is_verified ?? false,
-        created_at: u.created_at || new Date().toISOString()
-      };
+      const userData = normalizeUser(u, payload.email);
       setUser(userData);
       return { success: true, token: tokenVal, user: userData };
     } catch {
@@ -171,11 +191,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const res = await fetch('/api/auth/send-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email }),
       });
       const data = await res.json();
       if (!res.ok) {
-        return { success: false, error: data.error || 'Failed to send OTP code', cooldownSeconds: data.cooldownSeconds };
+        return {
+          success: false,
+          error: data.detail || data.error || 'Failed to send OTP code',
+          cooldownSeconds: data.cooldownSeconds,
+        };
       }
       return { success: true, cooldownSeconds: data.cooldownSeconds || 60 };
     } catch {
@@ -188,11 +212,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const res = await fetch('/api/auth/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, code })
+        body: JSON.stringify({ email, code }),
       });
       const data = await res.json();
       if (!res.ok) {
-        return { success: false, error: data.error || 'Invalid verification code' };
+        return { success: false, error: data.detail || data.error || 'Invalid verification code' };
       }
       return { success: true };
     } catch {
@@ -205,22 +229,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const res = await authFetch('/api/auth/complete-onboarding', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
       const data = await res.json();
       if (!res.ok) {
-        return { success: false, error: data.error || 'Failed to complete onboarding' };
+        return { success: false, error: data.detail || data.error || 'Failed to complete onboarding' };
       }
       if (data.token) {
         localStorage.setItem('skulbuy_token', data.token);
         setToken(data.token);
       }
       if (data.user) {
-        setUser(data.user);
+        setUser(normalizeUser(data.user));
       } else {
         await refreshUser();
       }
-      return { success: true, bonusAwarded: data.bonusAwarded, user: data.user };
+      return { success: true, bonusAwarded: data.bonusAwarded, user: data.user ? normalizeUser(data.user) : undefined };
     } catch {
       return { success: false, error: 'Network error completing onboarding' };
     }
@@ -230,11 +254,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('skulbuy_token');
     setToken(null);
     setUser(null);
-  };
-
-  const switchUser = async (userId: number | string) => {
-    localStorage.setItem('skulbuy_token', String(userId));
-    setToken(String(userId));
   };
 
   return (
@@ -248,10 +267,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         sendOtp,
         verifyOtp,
         logout,
-        switchUser,
         refreshUser,
         authFetch,
-        completeOnboarding
+        completeOnboarding,
       }}
     >
       {children}

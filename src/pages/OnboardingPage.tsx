@@ -213,12 +213,12 @@ export const OnboardingPage: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     setErrorMsg('');
-    const res = await login(email);
+    const res = await login(email, password);
     setLoading(false);
     if (res.success) {
       navigate('/');
     } else {
-      setErrorMsg(res.error || 'Invalid credentials. Please verify your email.');
+      setErrorMsg(res.error || 'Invalid credentials. Please verify your email and password.');
     }
   };
 

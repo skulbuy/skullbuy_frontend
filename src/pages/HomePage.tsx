@@ -100,7 +100,6 @@ export const HomePage = () => {
               className="bg-black/20 hover:bg-black/30 text-white text-xs font-bold px-3 py-1.5 rounded-xl transition flex items-center gap-1.5"
             >
               <span>Meetups</span>
-              <span className="bg-amber-400 text-black text-[9px] font-black px-1.5 py-0.5 rounded">Soon</span>
             </Link>
             <Link
               to="/sell"
@@ -486,7 +485,7 @@ export const HomePage = () => {
                 <div>
                   <div className="flex items-center gap-1.5">
                     <h2 className="font-extrabold text-sm text-gray-900">Campus Meetups & Gatherings</h2>
-                    <span className="bg-amber-100 text-amber-800 text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase">Coming Soon</span>
+                    <span className="bg-emerald-100 text-emerald-800 text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase">Live</span>
                   </div>
                   <p className="text-[10px] text-gray-400">Hostel & faculty student events</p>
                 </div>
@@ -534,7 +533,7 @@ export const HomePage = () => {
               <div className="flex items-center justify-between mb-2">
                 <span className="bg-white/20 backdrop-blur-md text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
                   <span>SkulBox Savings</span>
-                  <span className="bg-amber-400 text-slate-950 text-[8px] font-black px-1.5 py-0.2 rounded-full uppercase">Coming Soon</span>
+                  <span className="bg-emerald-400 text-slate-950 text-[8px] font-black px-1.5 py-0.2 rounded-full uppercase">Open</span>
                 </span>
                 <span className="text-[11px] font-semibold flex items-center gap-1 bg-black/20 px-2 py-0.5 rounded-full">
                   <Clock size={11} />

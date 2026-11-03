@@ -36,7 +36,7 @@ export const SkullyChatbot: React.FC = () => {
     {
       id: 'welcome',
       sender: 'skully',
-      text: `Hello ${user?.first_name || 'Scholar'}! 👋 I'm Skully, your official AI campus assistant.\n\n✨ **Skully AI is Coming Soon!**\nI'm currently training on campus deals, textbooks, rental items, and student safety tips. Full conversational recommendations will be enabled in an upcoming release! Stay tuned.`,
+      text: `Hello ${user?.first_name || 'Scholar'}! 👋 I'm Skully, your official AI campus assistant.\n\nAsk me for live campus deals on laptops, textbooks, hostel appliances, or how our 4-digit Handover PIN Escrow keeps your trades safe!`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       chips: DEFAULT_CHIPS
     }
@@ -169,7 +169,7 @@ export const SkullyChatbot: React.FC = () => {
                   <div className="flex items-center gap-1.5">
                     <h3 className="font-black text-sm tracking-tight text-slate-950">Skully AI</h3>
                     <span className="bg-slate-900 text-amber-300 text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase tracking-wider">
-                      Coming Soon
+                      Live
                     </span>
                   </div>
                   <p className="text-[10px] text-slate-900 font-semibold">

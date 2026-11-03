@@ -142,8 +142,8 @@ export const MeetupsPage: React.FC = () => {
             <div>
               <h1 className="font-black text-base text-gray-900 flex items-center gap-1.5">
                 <span>Campus Meetups</span>
-                <span className="bg-amber-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
-                  Coming Soon
+                <span className="bg-emerald-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
+                  Live
                 </span>
               </h1>
               <p className="text-[11px] text-gray-500">
@@ -218,17 +218,6 @@ export const MeetupsPage: React.FC = () => {
               Always meetup in designated high-traffic daylight areas: School Library Foyer, Student Union (SUB), or Science Complex.
             </p>
           </div>
-        </div>
-
-        {/* Coming Soon Notice */}
-        <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-2xl p-4 shadow-sm mb-4">
-          <div className="flex items-center gap-2">
-            <span className="bg-white/20 text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-wider">Preview Mode</span>
-          </div>
-          <h3 className="font-extrabold text-sm mt-1.5">Campus Meetups & Event Discovery Coming Soon</h3>
-          <p className="text-xs text-amber-100 mt-0.5 leading-relaxed">
-            Trade fairs, physical swap meets, and campus student events are launching soon. Meetup RSVPs and ambassador organizer tools will be enabled in an upcoming release!
-          </p>
         </div>
 
         {/* Section 1: Popular Across Nigerian Campuses */}
