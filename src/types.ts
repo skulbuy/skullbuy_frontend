@@ -327,4 +327,9 @@ export interface AdminMetrics {
   totalSkulboxSubscribers: number;
   totalSkulboxContributions: number;
   reportingDateWAT: string;
+  total_users?: number;
+  verified_users?: number;
+  total_listings?: number;
+  pending_reports?: number;
+  total_gmv?: number;
 }
