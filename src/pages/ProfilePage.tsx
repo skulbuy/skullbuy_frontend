@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { 
-  User, ShieldCheck, Award, Settings, ChevronRight, 
-  LogOut, Package, Users, BarChart3, Bell, CheckCircle2, 
+import {
+  User, ShieldCheck, Award, Settings, ChevronRight,
+  LogOut, Package, Users, BarChart3, Bell, CheckCircle2,
   Clock, AlertCircle, Upload, Heart, Tag, MessageCircle, ExternalLink, ShieldAlert,
   Wallet, ArrowDownLeft, ArrowUpRight, Plus, MapPin, Building2, CreditCard, Sparkles, RefreshCw
 } from 'lucide-react';
@@ -422,173 +422,169 @@ export const ProfilePage = () => {
       {/* Profile Header */}
       <div className="bg-white border-b border-gray-100 shadow-2xs">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 pb-5">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white flex items-center justify-center font-black text-xl shadow-sm overflow-hidden shrink-0">
-              {user.profile_picture ? (
-                <img src={user.profile_picture} alt={user.full_name} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-              ) : (
-                user.full_name.charAt(0)
-              )}
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <h1 className="text-base font-extrabold text-gray-900">{user.full_name}</h1>
-                {user.student_id_verified === 'verified' && (
-                  <span title="Verified Student">
-                    <ShieldCheck size={16} className="text-emerald-600" />
-                  </span>
-                )}
-              </div>
-              <p className="text-xs text-gray-500 font-medium">
-                {user.username ? `@${user.username} • ` : ''}
-                {user.department ? `${user.department} • ` : ''}
-                {user.level_of_study ? `${user.level_of_study} • ` : ''}
-                {user.campus_name || user.campus || 'FUTMX'}
-              </p>
-              <div className="flex items-center gap-1.5 mt-1">
-                <span className="text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-700 px-2 py-0.5 rounded">
-                  {user.role}
-                </span>
-                {user.matric_no && (
-                  <span className="text-[10px] font-mono text-gray-400">
-                    {user.matric_no}
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {user.role === 'admin' && (
-            <Link
-              to="/admin"
-              className="bg-red-500 hover:bg-red-600 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl shadow-xs transition flex items-center gap-1"
-            >
-              <ShieldAlert size={13} />
-              <span>Admin Portal</span>
-            </Link>
-          )}
-        </div>
-
-        {/* Verification Status Banner (AUTH-02, AUTH-03) */}
-        <div className="mt-4">
-          {user.student_id_verified === 'verified' ? (
-            <div className="bg-emerald-50 border border-emerald-200/80 rounded-xl p-2.5 flex items-center justify-between text-xs text-emerald-900">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
-                <span className="font-bold">Verified FUTMX Student Profile</span>
-              </div>
-              <span className="text-[10px] bg-emerald-200/60 font-black px-2 py-0.5 rounded text-emerald-800">TRUSTED</span>
-            </div>
-          ) : user.student_id_verified === 'pending' ? (
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-2.5 flex items-center justify-between text-xs text-amber-900">
-              <div className="flex items-center gap-2">
-                <Clock size={16} className="text-amber-600 shrink-0" />
-                <span>Student ID Verification is under campus staff review</span>
-              </div>
-              <span className="text-[10px] bg-amber-200/80 font-black px-2 py-0.5 rounded text-amber-900">PENDING</span>
-            </div>
-          ) : (
-            <div className="bg-gray-100 border border-gray-200 rounded-xl p-2.5 flex items-center justify-between text-xs">
-              <div className="flex items-center gap-2">
-                <AlertCircle size={16} className="text-gray-500 shrink-0" />
-                <span className="text-gray-700">Account not verified with Student ID</span>
-              </div>
-              <button
-                onClick={() => setShowVerifyModal(true)}
-                className="bg-amber-500/90 hover:bg-amber-500 text-white text-[11px] font-bold px-3 py-1 rounded-lg transition flex items-center gap-1 cursor-pointer"
-              >
-                <span>Verify Student ID</span>
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Chats & Messages Entry Point (Section 6) */}
-        <div className="mt-3">
-          <button
-            onClick={() => navigate('/messages')}
-            className="w-full bg-gradient-to-r from-emerald-50 via-teal-50 to-amber-50 hover:from-emerald-100 hover:to-amber-100 border border-emerald-200/80 rounded-2xl p-3 flex items-center justify-between text-left transition shadow-2xs group cursor-pointer"
-          >
+          <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#005c4b] text-white flex items-center justify-center shrink-0 shadow-xs relative">
-                <MessageCircle size={20} />
-                {unreadSummary.total > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-white">
-                    {unreadSummary.total}
-                  </span>
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white flex items-center justify-center font-black text-xl shadow-sm overflow-hidden shrink-0">
+                {user.profile_picture ? (
+                  <img src={user.profile_picture} alt={user.full_name} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                ) : (
+                  user.full_name.charAt(0)
                 )}
               </div>
               <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-extrabold text-xs text-gray-900 group-hover:text-emerald-800 transition">
-                    Chats & Messages
-                  </span>
-                  <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 px-1.5 py-0.2 rounded">
-                    Hub
-                  </span>
+                <div className="flex items-center gap-1.5">
+                  <h1 className="text-base font-extrabold text-gray-900">{user.full_name}</h1>
+                  {user.student_id_verified === 'verified' && (
+                    <span title="Verified Student">
+                      <ShieldCheck size={16} className="text-emerald-600" />
+                    </span>
+                  )}
                 </div>
-                <p className="text-[11px] text-gray-500 mt-0.5">
-                  Private trade chats & campus communities
+                <p className="text-xs text-gray-500 font-medium">
+                  {user.username ? `@${user.username} • ` : ''}
+                  {user.department ? `${user.department} • ` : ''}
+                  {user.level_of_study ? `${user.level_of_study} • ` : ''}
+                  {user.campus_name || user.campus || 'FUTMX'}
                 </p>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider bg-gray-100 text-gray-700 px-2 py-0.5 rounded">
+                    {user.role}
+                  </span>
+                  {user.matric_no && (
+                    <span className="text-[10px] font-mono text-gray-400">
+                      {user.matric_no}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <div className="text-right">
-                <span className="text-[10px] text-gray-400 font-bold block">Open Inbox</span>
+            {user.role === 'admin' && (
+              <Link
+                to="/admin"
+                className="bg-red-500 hover:bg-red-600 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl shadow-xs transition flex items-center gap-1"
+              >
+                <ShieldAlert size={13} />
+                <span>Admin Portal</span>
+              </Link>
+            )}
+          </div>
+
+          {/* Verification Status Banner (AUTH-02, AUTH-03) */}
+          <div className="mt-4">
+            {user.student_id_verified === 'verified' ? (
+              <div className="bg-emerald-50 border border-emerald-200/80 rounded-xl p-2.5 flex items-center justify-between text-xs text-emerald-900">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
+                  <span className="font-bold">Verified FUTMX Student Profile</span>
+                </div>
+                <span className="text-[10px] bg-emerald-200/60 font-black px-2 py-0.5 rounded text-emerald-800">TRUSTED</span>
               </div>
-              <div className="w-7 h-7 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-gray-500 group-hover:translate-x-0.5 transition">
-                <ChevronRight size={15} />
+            ) : user.student_id_verified === 'pending' ? (
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-2.5 flex items-center justify-between text-xs text-amber-900">
+                <div className="flex items-center gap-2">
+                  <Clock size={16} className="text-amber-600 shrink-0" />
+                  <span>Student ID Verification is under campus staff review</span>
+                </div>
+                <span className="text-[10px] bg-amber-200/80 font-black px-2 py-0.5 rounded text-amber-900">PENDING</span>
               </div>
+            ) : (
+              <div className="bg-gray-100 border border-gray-200 rounded-xl p-2.5 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2">
+                  <AlertCircle size={16} className="text-gray-500 shrink-0" />
+                  <span className="text-gray-700">Account not verified with Student ID</span>
+                </div>
+                <button
+                  onClick={() => setShowVerifyModal(true)}
+                  className="bg-amber-500/90 hover:bg-amber-500 text-white text-[11px] font-bold px-3 py-1 rounded-lg transition flex items-center gap-1 cursor-pointer"
+                >
+                  <span>Verify Student ID</span>
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Chats & Messages Entry Point (Section 6) */}
+          <div className="mt-3">
+            <button
+              onClick={() => navigate('/messages')}
+              className="w-full bg-gradient-to-r from-emerald-50 via-teal-50 to-amber-50 hover:from-emerald-100 hover:to-amber-100 border border-emerald-200/80 rounded-2xl p-3 flex items-center justify-between text-left transition shadow-2xs group cursor-pointer"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#005c4b] text-white flex items-center justify-center shrink-0 shadow-xs relative">
+                  <MessageCircle size={20} />
+                  {unreadSummary.total > 0 && (
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-white">
+                      {unreadSummary.total}
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-extrabold text-xs text-gray-900 group-hover:text-emerald-800 transition">
+                      Chats & Messages
+                    </span>
+                    <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 px-1.5 py-0.2 rounded">
+                      Hub
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-gray-500 mt-0.5">
+                    Private trade chats & campus communities
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <div className="text-right">
+                  <span className="text-[10px] text-gray-400 font-bold block">Open Inbox</span>
+                </div>
+                <div className="w-7 h-7 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-gray-500 group-hover:translate-x-0.5 transition">
+                  <ChevronRight size={15} />
+                </div>
+              </div>
+            </button>
+          </div>
+
+          {/* Quick Points, Wallet & Activity Card */}
+          <div className="grid grid-cols-4 gap-2 mt-4 pt-3 border-t border-gray-100 text-center">
+            <div
+              onClick={() => setActiveTab('wallet')}
+              className={`rounded-xl p-2 border cursor-pointer transition ${activeTab === 'wallet' ? 'bg-amber-500 text-white border-amber-500 shadow-xs' : 'bg-amber-50/70 border-amber-200/60'
+                }`}
+            >
+              <p className={`text-[9px] font-bold uppercase ${activeTab === 'wallet' ? 'text-amber-100' : 'text-amber-800'}`}>Wallet</p>
+              <p className={`text-xs font-black truncate mt-0.5 ${activeTab === 'wallet' ? 'text-white' : 'text-amber-600'}`}>
+                ₦{Number(user.wallet_balance || 0).toLocaleString()}
+              </p>
             </div>
-          </button>
-        </div>
 
-        {/* Quick Points, Wallet & Activity Card */}
-        <div className="grid grid-cols-4 gap-2 mt-4 pt-3 border-t border-gray-100 text-center">
-          <div 
-            onClick={() => setActiveTab('wallet')}
-            className={`rounded-xl p-2 border cursor-pointer transition ${
-              activeTab === 'wallet' ? 'bg-amber-500 text-white border-amber-500 shadow-xs' : 'bg-amber-50/70 border-amber-200/60'
-            }`}
-          >
-            <p className={`text-[9px] font-bold uppercase ${activeTab === 'wallet' ? 'text-amber-100' : 'text-amber-800'}`}>Wallet</p>
-            <p className={`text-xs font-black truncate mt-0.5 ${activeTab === 'wallet' ? 'text-white' : 'text-amber-600'}`}>
-              ₦{Number(user.wallet_balance || 0).toLocaleString()}
-            </p>
-          </div>
+            <div
+              onClick={() => setActiveTab('points')}
+              className={`rounded-xl p-2 border cursor-pointer transition ${activeTab === 'points' ? 'bg-amber-500 text-white border-amber-500 shadow-xs' : 'bg-gray-50 border-gray-100'
+                }`}
+            >
+              <p className={`text-[9px] font-bold uppercase ${activeTab === 'points' ? 'text-amber-100' : 'text-gray-400'}`}>Points</p>
+              <p className={`text-xs font-black mt-0.5 ${activeTab === 'points' ? 'text-white' : 'text-gray-900'}`}>{user.points} pts</p>
+            </div>
 
-          <div 
-            onClick={() => setActiveTab('points')}
-            className={`rounded-xl p-2 border cursor-pointer transition ${
-              activeTab === 'points' ? 'bg-amber-500 text-white border-amber-500 shadow-xs' : 'bg-gray-50 border-gray-100'
-            }`}
-          >
-            <p className={`text-[9px] font-bold uppercase ${activeTab === 'points' ? 'text-amber-100' : 'text-gray-400'}`}>Points</p>
-            <p className={`text-xs font-black mt-0.5 ${activeTab === 'points' ? 'text-white' : 'text-gray-900'}`}>{user.points} pts</p>
-          </div>
+            <div
+              onClick={() => setActiveTab('listings')}
+              className={`rounded-xl p-2 border cursor-pointer transition ${activeTab === 'listings' ? 'bg-amber-500 text-white border-amber-500 shadow-xs' : 'bg-gray-50 border-gray-100'
+                }`}
+            >
+              <p className={`text-[9px] font-bold uppercase ${activeTab === 'listings' ? 'text-amber-100' : 'text-gray-400'}`}>Listings</p>
+              <p className={`text-xs font-black mt-0.5 ${activeTab === 'listings' ? 'text-white' : 'text-gray-900'}`}>{myListings.length}</p>
+            </div>
 
-          <div 
-            onClick={() => setActiveTab('listings')}
-            className={`rounded-xl p-2 border cursor-pointer transition ${
-              activeTab === 'listings' ? 'bg-amber-500 text-white border-amber-500 shadow-xs' : 'bg-gray-50 border-gray-100'
-            }`}
-          >
-            <p className={`text-[9px] font-bold uppercase ${activeTab === 'listings' ? 'text-amber-100' : 'text-gray-400'}`}>Listings</p>
-            <p className={`text-xs font-black mt-0.5 ${activeTab === 'listings' ? 'text-white' : 'text-gray-900'}`}>{myListings.length}</p>
+            <div
+              onClick={() => setActiveTab('saved')}
+              className={`rounded-xl p-2 border cursor-pointer transition ${activeTab === 'saved' ? 'bg-amber-500 text-white border-amber-500 shadow-xs' : 'bg-gray-50 border-gray-100'
+                }`}
+            >
+              <p className={`text-[9px] font-bold uppercase ${activeTab === 'saved' ? 'text-amber-100' : 'text-gray-400'}`}>Saved</p>
+              <p className={`text-xs font-black mt-0.5 ${activeTab === 'saved' ? 'text-white' : 'text-gray-900'}`}>{savedItems.length}</p>
+            </div>
           </div>
-
-          <div 
-            onClick={() => setActiveTab('saved')}
-            className={`rounded-xl p-2 border cursor-pointer transition ${
-              activeTab === 'saved' ? 'bg-amber-500 text-white border-amber-500 shadow-xs' : 'bg-gray-50 border-gray-100'
-            }`}
-          >
-            <p className={`text-[9px] font-bold uppercase ${activeTab === 'saved' ? 'text-amber-100' : 'text-gray-400'}`}>Saved</p>
-            <p className={`text-xs font-black mt-0.5 ${activeTab === 'saved' ? 'text-white' : 'text-gray-900'}`}>{savedItems.length}</p>
-          </div>
-        </div>
         </div>
       </div>
 
@@ -597,42 +593,37 @@ export const ProfilePage = () => {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex text-xs font-bold overflow-x-auto no-scrollbar">
           <button
             onClick={() => setActiveTab('wallet')}
-            className={`py-3 px-3 border-b-2 transition whitespace-nowrap flex items-center gap-1.5 ${
-              activeTab === 'wallet' ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-500 hover:text-gray-800'
-            }`}
+            className={`py-3 px-3 border-b-2 transition whitespace-nowrap flex items-center gap-1.5 ${activeTab === 'wallet' ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-500 hover:text-gray-800'
+              }`}
           >
             <Wallet size={14} />
             <span>Campus Wallet</span>
           </button>
           <button
             onClick={() => setActiveTab('listings')}
-            className={`py-3 px-3 border-b-2 transition whitespace-nowrap ${
-              activeTab === 'listings' ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-500 hover:text-gray-800'
-            }`}
+            className={`py-3 px-3 border-b-2 transition whitespace-nowrap ${activeTab === 'listings' ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-500 hover:text-gray-800'
+              }`}
           >
             My Listings ({myListings.length})
           </button>
           <button
             onClick={() => setActiveTab('saved')}
-            className={`py-3 px-3 border-b-2 transition whitespace-nowrap ${
-              activeTab === 'saved' ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-500 hover:text-gray-800'
-            }`}
+            className={`py-3 px-3 border-b-2 transition whitespace-nowrap ${activeTab === 'saved' ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-500 hover:text-gray-800'
+              }`}
           >
             Saved ({savedItems.length})
           </button>
           <button
             onClick={() => setActiveTab('points')}
-            className={`py-3 px-3 border-b-2 transition whitespace-nowrap ${
-              activeTab === 'points' ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-500 hover:text-gray-800'
-            }`}
+            className={`py-3 px-3 border-b-2 transition whitespace-nowrap ${activeTab === 'points' ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-500 hover:text-gray-800'
+              }`}
           >
             Points Wallet
           </button>
           <button
             onClick={() => setActiveTab('settings')}
-            className={`py-3 px-3 border-b-2 transition whitespace-nowrap ${
-              activeTab === 'settings' ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-500 hover:text-gray-800'
-            }`}
+            className={`py-3 px-3 border-b-2 transition whitespace-nowrap ${activeTab === 'settings' ? 'border-amber-500 text-amber-600' : 'border-transparent text-gray-500 hover:text-gray-800'
+              }`}
           >
             Account
           </button>
@@ -646,7 +637,7 @@ export const ProfilePage = () => {
             {/* Wallet Balance Hero Card */}
             <div className="bg-gradient-to-br from-gray-900 via-gray-850 to-gray-900 rounded-3xl p-5 text-white shadow-md border border-gray-800 relative overflow-hidden">
               <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-amber-500/10 rounded-full blur-xl pointer-events-none" />
-              
+
               <div className="flex justify-between items-start mb-3">
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -703,7 +694,7 @@ export const ProfilePage = () => {
               <p className="text-[11px] text-gray-500">
                 Buyers and sellers use this to calculate proximity and agree on daylight meetup spots.
               </p>
-              
+
               <select
                 value={editArea}
                 disabled={updatingArea}
@@ -779,9 +770,8 @@ export const ProfilePage = () => {
                   {walletTransactions.map((tx) => (
                     <div key={tx.id} className="py-3 flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${
-                          tx.type === 'credit' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'
-                        }`}>
+                        <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${tx.type === 'credit' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'
+                          }`}>
                           {tx.type === 'credit' ? <ArrowDownLeft size={16} /> : <ArrowUpRight size={16} />}
                         </div>
                         <div className="min-w-0">
@@ -830,9 +820,8 @@ export const ProfilePage = () => {
                     <img src={item.image_url} alt={item.title} className="w-16 h-16 rounded-xl object-cover bg-gray-100 shrink-0" />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded ${
-                          item.status === 'active' ? 'bg-emerald-100 text-emerald-800' : item.status === 'sold' ? 'bg-gray-100 text-gray-700' : 'bg-red-100 text-red-700'
-                        }`}>
+                        <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded ${item.status === 'active' ? 'bg-emerald-100 text-emerald-800' : item.status === 'sold' ? 'bg-gray-100 text-gray-700' : 'bg-red-100 text-red-700'
+                          }`}>
                           {item.status}
                         </span>
                         <span className="text-[10px] text-gray-400 font-medium">
@@ -953,7 +942,7 @@ export const ProfilePage = () => {
           <div className="space-y-4 text-xs">
             <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-2xs space-y-3">
               <h4 className="font-extrabold text-gray-900">Account Details & University</h4>
-              
+
               {uniSuccessMsg && (
                 <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] p-2.5 rounded-xl font-bold">
                   {uniSuccessMsg}
@@ -962,7 +951,7 @@ export const ProfilePage = () => {
 
               <div className="space-y-2.5 text-gray-600">
                 <p>Email: <strong className="text-gray-900">{user.email}</strong></p>
-                
+
                 <div>
                   <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">
                     Your Primary Nigerian University
